@@ -236,7 +236,7 @@
                             })(objFrom[prop],obj);
                         } else if(typeof objFrom[prop] == "object") {
                             // if this property is an object, then extend it using this method as well
-                            obj[prop] = this.extendTopDown({},objFrom[prop]);
+                            obj[prop] = extendTopDown({},objFrom[prop]);
                         } else {
                             obj[prop] = objFrom[prop];
                         }
