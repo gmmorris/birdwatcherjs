@@ -11,10 +11,6 @@
      */
     var spk;
 
-    /**
-     * Spy on an object's methods by listening for every execption thrown within it's methods
-     * if an exception occurs it is caught and logged instead of being thrown.
-     * */
     /***
      * The main Spook method which covertly spies on an object's methods by listening for every
      * error thrown by them.
