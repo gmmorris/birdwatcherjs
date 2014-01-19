@@ -5,6 +5,10 @@
  */
 (function (window,document,undefined) {
 
+
+    // Save the previous value of the `Spook` variable.
+    var conflictedSpook = window.Spook;
+
     /**
      * The top-level namespace
      * @namespace SpookJS. A covert error handling utility for Javascript.
@@ -180,9 +184,6 @@
         return spookConfig;
 
     };
-
-    // Save the previous value of the `Spook` variable.
-    var conflictedSpook = window.Spook;
 
     /**
      * Revert the global window.Spook variable to it's original value and return this Spook object.
