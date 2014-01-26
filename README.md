@@ -1,4 +1,4 @@
-Spookjs
+birdwatcherjs
 =======
 
 A small utility for implementing the NCZ JavaScript error handling anti-pattern.
@@ -6,10 +6,10 @@ To understand the anti-pattern: http://www.nczonline.net/blog/2009/04/28/javascr
 
 ### Basic usage
 
-To use Spook, all you have to do is tell Spook to spy on an object and set the callback you wish to have called when an error is raised.
+To use birdwatcher, all you have to do is tell birdwatcher to spy on an object and set the callback you wish to have called when an error is raised.
 
 ```html
-    <script type="text/javascript" src="spook.js"></script>
+    <script type="text/javascript" src="birdwatcher.js"></script>
 ```
 
 ```js
@@ -19,9 +19,9 @@ To use Spook, all you have to do is tell Spook to spy on an object and set the c
         }
     };
 
-    Spook(window.theKing);
+    birdwatcher(window.theKing);
 
-    Spook.configuration({
+    birdwatcher.configuration({
         onError:function(exception,method){
             if(method == "giveUpThrone") {
                 assassin.killKing();
@@ -56,8 +56,8 @@ If the global Underscore variable isn't available (if you're using it in noConfl
         }
     };
 
-    Spook(window.theKing);
-    Spook(window.theAssassin,{
+    birdwatcher(window.theKing);
+    birdwatcher(window.theAssassin,{
         onError:function(exception,method){
             // notify the rebels that the assassin has failed
             // or rather when theAssassin.killThePrince() is called
@@ -65,7 +65,7 @@ If the global Underscore variable isn't available (if you're using it in noConfl
         }
     });
 
-    Spook.configuration({
+    birdwatcher.configuration({
         onError:function(exception,method){
             // all other error which were raised
 
@@ -84,7 +84,7 @@ You cen prevent the rethrow from happening by setting the rethrow config to fals
 This can be used globally or at a single object's level.
 
 ```js
-    Spook.configuration({
+    birdwatcher.configuration({
         rethrow:false
     });
 ```

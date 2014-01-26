@@ -1,5 +1,5 @@
 /**
- * @name TEST spook.js
+ * @name TEST birdwatcher.js
  * @author Gidi Morris (c) 2014
  * @version 0.0.1
  */
@@ -22,7 +22,7 @@ $(document).ready(function () {
     module("Global configuration", {
         setup: function() {
             // reset
-            Spook.configuration({
+            birdwatcher.configuration({
                 rethrow : true,
                 addStackTrace: false,
                 onError: null,
@@ -34,7 +34,7 @@ $(document).ready(function () {
         }
     });
 
-    test('should be able to spook object with only one function without interfering', function () {
+    test('should be able to birdwatcher object with only one function without interfering', function () {
 
         var oneTrickPony = {
             trick : function(){
@@ -43,7 +43,7 @@ $(document).ready(function () {
             }
         };
 
-        Spook(oneTrickPony);
+        birdwatcher(oneTrickPony);
 
         oneTrickPony.trick();
 
@@ -51,7 +51,7 @@ $(document).ready(function () {
 
     });
 
-    test('should be able to spook object with multiple functions without interfering', function () {
+    test('should be able to birdwatcher object with multiple functions without interfering', function () {
 
         var twoTrickPony = {
             trick : function(){
@@ -63,7 +63,7 @@ $(document).ready(function () {
                 ok(true);
             }
         };
-        Spook(twoTrickPony);
+        birdwatcher(twoTrickPony);
 
         twoTrickPony.trick();
         twoTrickPony.trickier();
@@ -75,7 +75,7 @@ $(document).ready(function () {
 
         var msg = "OneTrickPony failed";
 
-        Spook.configuration({
+        birdwatcher.configuration({
             onError:function(){
                 ok(true);
             }
@@ -86,7 +86,7 @@ $(document).ready(function () {
                 throw new Error(msg);
             }
         };
-        Spook(oneTrickPony);
+        birdwatcher(oneTrickPony);
 
         raises(function(){
             oneTrickPony.trick();
@@ -99,7 +99,7 @@ $(document).ready(function () {
 
         var msg = "TwoTrickPony failed ";
 
-        Spook.configuration({
+        birdwatcher.configuration({
             onError:function(){
                 ok(true);
             }
@@ -113,7 +113,7 @@ $(document).ready(function () {
                 throw new Error(msg + "2");
             }
         };
-        Spook(twoTrickPony);
+        birdwatcher(twoTrickPony);
 
         raises(function(){
             twoTrickPony.trick();
@@ -130,7 +130,7 @@ $(document).ready(function () {
 
         var msg = "TwoTrickPony failed ";
 
-        Spook.configuration({
+        birdwatcher.configuration({
             rethrow:false,
             onError:function(){
                 ok(true);
@@ -145,7 +145,7 @@ $(document).ready(function () {
                 throw new Error(msg + "2");
             }
         };
-        Spook(twoTrickPony);
+        birdwatcher(twoTrickPony);
 
         twoTrickPony.trick();
         twoTrickPony.trickier();
@@ -157,7 +157,7 @@ $(document).ready(function () {
 
         var msg = "TwoTrickPony failed ";
 
-        Spook.configuration({
+        birdwatcher.configuration({
             onRethrow:function(){
                 ok(true);
             },
@@ -174,7 +174,7 @@ $(document).ready(function () {
                 throw new Error(msg + "2");
             }
         };
-        Spook(twoTrickPony);
+        birdwatcher(twoTrickPony);
 
         raises(function(){
             twoTrickPony.trick();
@@ -189,7 +189,7 @@ $(document).ready(function () {
 
     test('should call onError using global config for multiple objects', function () {
 
-        Spook.configuration({
+        birdwatcher.configuration({
             onError:function(){
                 ok(true);
             }
@@ -209,8 +209,8 @@ $(document).ready(function () {
             }
         };
 
-        Spook(oneTrickPony);
-        Spook(twoTrickPony);
+        birdwatcher(oneTrickPony);
+        birdwatcher(twoTrickPony);
 
         raises(function(){
             twoTrickPony.trick();
@@ -231,7 +231,7 @@ $(document).ready(function () {
 
     test('should be used for single object', function () {
 
-        Spook.configuration({
+        birdwatcher.configuration({
             onError:function(){
                 ok(false);
             }
@@ -243,7 +243,7 @@ $(document).ready(function () {
             }
         };
 
-        Spook(oneTrickPony,{
+        birdwatcher(oneTrickPony,{
             onError:function(){
                 ok(true);
             }
@@ -258,7 +258,7 @@ $(document).ready(function () {
 
     test('should be used for single object but default for others', function () {
 
-        Spook.configuration({
+        birdwatcher.configuration({
             onError:function(exp,method){
                 if(method == "shouldCall") {
                     ok(true);
@@ -280,7 +280,7 @@ $(document).ready(function () {
             }
         };
 
-        Spook(oneTrickPony,{
+        birdwatcher(oneTrickPony,{
             onError:function(exp,method){
                 if(method == "trick") {
                     ok(true);
@@ -290,7 +290,7 @@ $(document).ready(function () {
             }
         });
 
-        Spook(secondOneTrickPony);
+        birdwatcher(secondOneTrickPony);
 
         raises(function(){
             oneTrickPony.trick();
@@ -304,7 +304,7 @@ $(document).ready(function () {
 
     test('should bubble errors for all object except the specific one', function () {
 
-        Spook.configuration({
+        birdwatcher.configuration({
             onRethrow:function(exp,method){
                 ok(true);
             },
@@ -325,11 +325,11 @@ $(document).ready(function () {
             }
         };
 
-        Spook(oneTrickPony,{
+        birdwatcher(oneTrickPony,{
             rethrow:false
         });
 
-        Spook(secondOneTrickPony);
+        birdwatcher(secondOneTrickPony);
 
         oneTrickPony.trick();
         raises(function(){

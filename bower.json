@@ -1,0 +1,6 @@
+{
+    "name": "birdwatcher",
+    "version": "0.1.0",
+    "main": "birdwatcher.js",
+    "ignore": ["test", ".html"]
+}

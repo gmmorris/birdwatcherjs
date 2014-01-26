@@ -1,55 +1,55 @@
 /**
- * @name spook.js
+ * @name birdwatcher.js
  * @author Gidi Meir Morris, 2014
  * @version 0.1
  */
 (function (window,document,undefined) {
 
 
-    // Save the previous value of the `Spook` variable.
-    var conflictedSpook = window.Spook;
+    // Save the previous value of the `birdwatcher` variable.
+    var conflictedBirdwatcher = window.birdwatcher;
 
     /**
      * The top-level namespace
-     * @namespace SpookJS. A covert error handling utility for Javascript.
+     * @namespace birdwatcherJS. A covert error handling utility for Javascript.
      */
-    var spk;
+    var brdwtch;
 
     /***
-     * The main Spook method which covertly spies on an object's methods by listening for every
+     * The main birdwatcher method which covertly spies on an object's methods by listening for every
      * error thrown by them.
      * If an error is raised by the method, it is caught and can be dealt with.
      *
      * Best on the Exception handling anti-pattern by Nicholas C. Zakas (MIT Licensed)
      * @link http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/
      *
-     * @param spookedObj (object) The object we wish to add error handling to.
+     * @param birdwatcheredObj (object) The object we wish to add error handling to.
      * @param config (object, optional) Spetial configurations to take into account for this particular object
      */
-    spk = window.Spook = function(spookedObj,config){
-        if (typeof spookedObj == 'object') {
+    brdwtch = window.birdwatcher = function(birdwatcheredObj,config){
+        if (typeof birdwatcheredObj == 'object') {
 
             /**
-             * Merge the specific configuration for this object with the global Spook configuration
-             * so that the Spook handler function has a single config object to use
+             * Merge the specific configuration for this object with the global birdwatcher configuration
+             * so that the birdwatcher handler function has a single config object to use
              */
             config = config || {};
-            config = extendTopDown(config,spookConfig);
+            config = extendTopDown(config,birdwatcherConfig);
 
             // Cycle through the object's properties and find the methods (functions)
-            for (var prop in spookedObj) {
-                var method = spookedObj[prop];
+            for (var prop in birdwatcheredObj) {
+                var method = birdwatcheredObj[prop];
                 if (typeof method == "function") {
                     /**
-                     * Create a cloure which will be called instead of the existing method on the spooked object.
+                     * Create a cloure which will be called instead of the existing method on the birdwatchered object.
                      * Usually it will simply add a call for the method and return it's value, as usual.
-                     * This is a completly covert operation... the object being spooked doesn't even know
+                     * This is a completly covert operation... the object being birdwatchered doesn't even know
                      * it has a spy on its ass.
                      * This is the Jason Bourne of function (not to be confused with James Bond
                      * who goes around telling everyone who he is and what his favorite drink is.
                      * Worst. Spy. Ever.
                      */
-                    spookedObj[prop] = (function (spookedObj,methodName, method, configuration, spookObject) {
+                    birdwatcheredObj[prop] = (function (birdwatcheredObj,methodName, method, configuration, birdwatcherObject) {
                         return function () {
                             try {
                                 return method.apply(this, arguments);
@@ -84,22 +84,22 @@
                                 }
 
                                 if(typeof configuration.onError == "function") {
-                                    // call the onError callback in the context of the spookedObject
-                                    configuration.onError.call(spookedObj, exception,methodName,configuration,spookObject);
+                                    // call the onError callback in the context of the birdwatcheredObject
+                                    configuration.onError.call(birdwatcheredObj, exception,methodName,configuration,birdwatcherObject);
                                 }
 
                                 // Should we rethrow the error
                                 if (configuration.rethrow) {
                                     // if a callback has been specified before the error needs to be rethrown - call it
                                     if (typeof configuration.onRethrow == 'function') {
-                                        configuration.onRethrow.call(spookedObj, o_O, exception,methodName,configuration,spookObject);
+                                        configuration.onRethrow.call(birdwatcheredObj, o_O, exception,methodName,configuration,birdwatcherObject);
                                     }
                                     throw o_O;
                                 }
                             }
                         };
 
-                    })(spookedObj,prop, method, config, this);
+                    })(birdwatcheredObj,prop, method, config, this);
                 }
             }
             return true;
@@ -108,47 +108,47 @@
     };
 
     // Current version of the utility.
-    spk.VERSION = '0.1';
+    brdwtch.VERSION = '0.1';
 
     // The default configuration
-    var spookConfig = {
+    var birdwatcherConfig = {
         /***
          * rethrow (boolean) Should methods be rethrowed when an error takes place.
          */
         rethrow : true,
         /***
-         * addStackTrace (boolean) When an error is raised, should Spook try to include a stack trace on the exception object?
+         * addStackTrace (boolean) When an error is raised, should birdwatcher try to include a stack trace on the exception object?
          */
         addStackTrace: false,
 
         /***
-         * onError (function) A callback to be called by the Spook when an error occurs.
-         * This is the main tool that SpookJS supplies the user to deal with his error handling.
+         * onError (function) A callback to be called by the birdwatcher when an error occurs.
+         * This is the main tool that birdwatcherJS supplies the user to deal with his error handling.
          * The signature of the callback should have the following parameters:
          * exception (object) An exception object with metadata about the error.
          * methodName (String) The name of the function that raised the error
-         * configuration (Object) The spook configuration for the object which raised the error. Unless a unique configuration was specified when the spook operation was attached to the object, this will be the Spook's default configuration.
-         * Spook (Object) The actual Spook utility.
+         * configuration (Object) The birdwatcher configuration for the object which raised the error. Unless a unique configuration was specified when the birdwatcher operation was attached to the object, this will be the birdwatcher's default configuration.
+         * birdwatcher (Object) The actual birdwatcher utility.
          * The context callback will be the actual object which raised the error, meaning thatthe keyword 'this' can be used to access it.
          */
         onError: null,
 
         /**
-         * A boolean signifying whether an error should be rethrown after being caught by the Spook.
-         * This allows the user to continue with regular error handling in addition to the spook's operation.
+         * A boolean signifying whether an error should be rethrown after being caught by the birdwatcher.
+         * This allows the user to continue with regular error handling in addition to the birdwatcher's operation.
          * This means you can log error and still use them to end failed operations in your business logic.
          * Much like using an indetectable poison to murder a high ranking government official without anyone knowing
          * it wasn't simply an innocent heart attack.
          */
         rethrow:true,
         /***
-         * onRethrow (function) A callback to be called by the Spook before rethrowing an error.
+         * onRethrow (function) A callback to be called by the birdwatcher before rethrowing an error.
          * The signature of the callback should have the following parameters:
          * error (object) The actual Error object which was raised.
          * exception (object) An exception object with metadata about the error.
          * methodName (String) The name of the function that raised the error
-         * configuration (Object) The spook configuration for the object which raised the error. Unless a unique configuration was specified when the spook operation was attached to the object, this will be the Spook's default configuration.
-         * Spook (Object) The actual Spook utility.
+         * configuration (Object) The birdwatcher configuration for the object which raised the error. Unless a unique configuration was specified when the birdwatcher operation was attached to the object, this will be the birdwatcher's default configuration.
+         * birdwatcher (Object) The actual birdwatcher utility.
          * The context callback will be the actual object which raised the error, meaning thatthe keyword 'this' can be used to access it.
          */
         onRethrow: null
@@ -156,45 +156,45 @@
 
 
     /**
-     * Get/Set the configuration for the Spook object
+     * Get/Set the configuration for the birdwatcher object
      * @param config (object,optional) A configuration object with any of the configuration properties
      * @example
      <code><pre>
-        Spook.configuration({
-            onError: function(exception,methodName,configuration,spookObject){
+        birdwatcher.configuration({
+            onError: function(exception,methodName,configuration,birdwatcherObject){
                 console.log(exception.message);
             }
          });
      </pre></code>
      */
-    spk.configuration = function(config){
+    brdwtch.configuration = function(config){
         // If an object param is provided - replace the specific properties
         // it has set in the param with the equivalent property in the config
         if(config && config instanceof Object) {
             // check whether custom configurations have been specified, if so use them instead
             // of the defaults
             for (var key in config) {
-                if (spookConfig.hasOwnProperty(key) && config.hasOwnProperty(key)) {
-                    spookConfig[key] = config[key];
+                if (birdwatcherConfig.hasOwnProperty(key) && config.hasOwnProperty(key)) {
+                    birdwatcherConfig[key] = config[key];
                 }
             }
         }
 
         // return the configuration object
-        return spookConfig;
+        return birdwatcherConfig;
 
     };
 
     /**
-     * Revert the global window.Spook variable to it's original value and return this Spook object.
-     * This allows users to include multiple versions of Spook objects on a single page or another global variable named "Spook".
+     * Revert the global window.birdwatcher variable to it's original value and return this birdwatcher object.
+     * This allows users to include multiple versions of birdwatcher objects on a single page or another global variable named "birdwatcher".
      * @example
      <code><pre>
-     Spook.noConflict();
+     birdwatcher.noConflict();
      </pre></code>
      */
-    Spook.noConflict = function () {
-        window.Spook = conflictedSpook;
+    birdwatcher.noConflict = function () {
+        window.birdwatcher = conflictedBirdwatcher;
         return this;
     };
 
@@ -203,7 +203,7 @@
      */
 
     /***
-     * Borrowed from Underscore++ ( https://github.com/gmmorris/underscorepp ) as I didn't want to make Spook dependant on Underscore++
+     * Borrowed from Underscore++ ( https://github.com/gmmorris/underscorepp ) as I didn't want to make birdwatcher dependant on Underscore++
      * ===========================
      * Merge objects in such a way that the preceding properties take precedence over the following properties.
      * This is similar to Underscore's extend method, but Underscore's extend method would give precedence to the following
