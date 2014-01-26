@@ -4,7 +4,7 @@
  * @version 0.1
  */
 (function (window,document,undefined) {
-
+    'use strict';
 
     // Save the previous value of the `birdwatcher` variable.
     var conflictedBirdwatcher = window.birdwatcher;
@@ -112,10 +112,6 @@
 
     // The default configuration
     var birdwatcherConfig = {
-        /***
-         * rethrow (boolean) Should methods be rethrowed when an error takes place.
-         */
-        rethrow : true,
         /***
          * addStackTrace (boolean) When an error is raised, should birdwatcher try to include a stack trace on the exception object?
          */
