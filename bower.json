@@ -2,6 +2,9 @@
     "name": "birdwatcher",
     "version": "0.1.0",
     "main": "birdwatcher.js",
+    "devDependencies": {
+        "qunit" : "latest"
+    },
     "ignore": ["test", ".html"],
     "keywords": ["birdwatcher","error","handling"]
 }

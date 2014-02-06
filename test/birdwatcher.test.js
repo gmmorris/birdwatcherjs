@@ -88,7 +88,7 @@ $(document).ready(function () {
         };
         birdwatcher(oneTrickPony);
 
-        raises(function(){
+        throws(function(){
             oneTrickPony.trick();
         },msg);
 
@@ -115,11 +115,11 @@ $(document).ready(function () {
         };
         birdwatcher(twoTrickPony);
 
-        raises(function(){
+        throws(function(){
             twoTrickPony.trick();
         },msg + "1");
 
-        raises(function(){
+        throws(function(){
             twoTrickPony.trickier();
         },msg + "2");
 
@@ -176,11 +176,11 @@ $(document).ready(function () {
         };
         birdwatcher(twoTrickPony);
 
-        raises(function(){
+        throws(function(){
             twoTrickPony.trick();
         },msg + "1");
 
-        raises(function(){
+        throws(function(){
             twoTrickPony.trickier();
         },msg + "2");
 
@@ -212,15 +212,15 @@ $(document).ready(function () {
         birdwatcher(oneTrickPony);
         birdwatcher(twoTrickPony);
 
-        raises(function(){
+        throws(function(){
             twoTrickPony.trick();
         });
 
-        raises(function(){
+        throws(function(){
             twoTrickPony.trickier();
         });
 
-        raises(function(){
+        throws(function(){
             oneTrickPony.trick();
         });
 
@@ -249,7 +249,7 @@ $(document).ready(function () {
             }
         });
 
-        raises(function(){
+        throws(function(){
             oneTrickPony.trick();
         });
 
@@ -292,10 +292,10 @@ $(document).ready(function () {
 
         birdwatcher(secondOneTrickPony);
 
-        raises(function(){
+        throws(function(){
             oneTrickPony.trick();
         });
-        raises(function(){
+        throws(function(){
             secondOneTrickPony.shouldCall();
         });
 
@@ -332,7 +332,7 @@ $(document).ready(function () {
         birdwatcher(secondOneTrickPony);
 
         oneTrickPony.trick();
-        raises(function(){
+        throws(function(){
             secondOneTrickPony.shouldCall();
         });
 

@@ -2,6 +2,9 @@
  * @name birdwatcher.js
  * @author Gidi Meir Morris, 2014
  * @version 0.1
+ * 
+ * Birdwatcher (Slang) A spy, usually used in the UK.
+ * 
  */
 (function (window,document,undefined) {
     'use strict';
@@ -44,47 +47,11 @@
                      * Usually it will simply add a call for the method and return it's value, as usual.
                      * This is a completly covert operation... the object being birdwatchered doesn't even know
                      * it has a spy on its ass.
-                     * This is the Jason Bourne of function (not to be confused with James Bond
+                     * This is the Jason Bourne of functions (not to be confused with James Bond
                      * who goes around telling everyone who he is and what his favorite drink is.
-                     * Worst. Spy. Ever.
+                     * Worst. Spy. Ever.)
                      */
-                    birdwatcheredObj[prop] = (function (birdwatcheredObj,methodName, method, configuration, birdwatcherObject) {
-                        return function () {
-                            try {
-                                return method.apply(this, arguments);
-                            } catch (o_O) {
-
-                                // Check if there is any operation we may actually have to execute, if not, move along
-                                var noOp = !((configuration.rethrow && typeof configuration.onRethrow == 'function') || typeof configuration.onError == "function");
-                                if(!noOp) {
-                                    if(!(o_O instanceof Error) && configuration.errorize) {
-                                        var message = "Error ["+methodName+":] ";
-                                        if (typeof o_O == "object" && o_O.hasOwnProperty('message') && typeof o_O.message == 'string') {
-                                            message += o_O.message;
-                                        } else if (typeof o_O == "string") {
-                                            message += o_O;
-                                        }
-                                        o_O = new BirdwatcherError(message,o_O,birdwatcheredObj,methodName);
-                                    }                                    
-
-                                    if(typeof configuration.onError == "function") {
-                                        // call the onError callback in the context of the birdwatcheredObject
-                                        configuration.onError.call(birdwatcheredObj, o_O,methodName,configuration,birdwatcherObject);
-                                    }
-
-                                    // Should we rethrow the error
-                                    if (configuration.rethrow === true) {
-                                        // if a callback has been specified before the error needs to be rethrown - call it
-                                        if (typeof configuration.onRethrow == 'function') {
-                                            configuration.onRethrow.call(birdwatcheredObj, o_O,methodName,configuration,birdwatcherObject);
-                                        }
-                                        throw o_O;
-                                    }
-                                }
-                            }
-                        };
-
-                    })(birdwatcheredObj,prop, method, config, brdwtch);
+                    birdwatcheredObj[prop] = createErrorClosure(birdwatcheredObj,prop, method, config, brdwtch);
                 }
             }
             return true;
@@ -185,6 +152,49 @@
      * Internal functions
      */
 
+     var createErrorClosure = function (birdwatcheredObj,methodName, method, configuration, birdwatcherObject) {
+                        return function () {
+                            try {
+                                return method.apply(this, arguments);
+                            } catch (o_O) {
+
+                                // Check if there is any operation we may actually have to execute, if not, move along
+                                var noOp = !((configuration.rethrow && typeof configuration.onRethrow == 'function') || typeof configuration.onError == "function");
+                                if(!noOp) {
+
+                                    // We need a new accessor so that we can change it when the exception is errorized
+                                    var err = o_O;
+                                    // If the thrown object isn't an Error and the config says we should errorize it
+                                    if(!(o_O instanceof Error) && configuration.errorize) {
+                                        // figure out the message for the error object
+                                        var message = "Error ["+methodName+":] ";
+                                        if (typeof o_O == "object" && o_O.hasOwnProperty('message') && typeof o_O.message == 'string') {
+                                            message += o_O.message;
+                                        } else if (typeof o_O == "string") {
+                                            message += o_O;
+                                        }
+                                        err = new BirdwatcherError(message,o_O,birdwatcheredObj,methodName);
+                                    }                                    
+
+                                    if(typeof configuration.onError == "function") {
+                                        // call the onError callback in the context of the birdwatcheredObject
+                                        configuration.onError.call(birdwatcheredObj, err,methodName,configuration,birdwatcherObject);
+                                    }
+
+                                    // Should we rethrow the error
+                                    if (configuration.rethrow === true) {
+                                        // if a callback has been specified before the error needs to be rethrown - call it
+                                        if (typeof configuration.onRethrow == 'function') {
+                                            configuration.onRethrow.call(birdwatcheredObj, err,methodName,configuration,birdwatcherObject);
+                                        }
+                                        throw err;
+                                    }
+                                }
+                            }
+                        };
+
+                    };
+
      var BirdwatcherError = function(message,originalError,srcObject,method){
         this.name = "BirdwatcherError";
         this.error = originalError;
@@ -219,11 +229,7 @@
                         if(typeof objFrom[prop] == "function") {
                             // use a closure to call the function within the context of the object
                             // being extended
-                            obj[prop] = (function(func,context){
-                                return function(){
-                                    return func.apply(context,arguments);
-                                }
-                            })(objFrom[prop],obj);
+                            obj[prop] = rebindFunction(objFrom[prop],obj);
                         } else if(typeof objFrom[prop] == "object") {
                             // if this property is an object, then extend it using this method as well
                             obj[prop] = extendTopDown({},objFrom[prop]);
@@ -237,5 +243,18 @@
             }
         }
         return obj;
-    }
+    };
+
+
+    /***
+    * Wrap a function in a closure so that it is executed in a particular context.
+    * We use this instead of Function.prototype.bind as that doesn't exist in older browsers
+    * @param func (function) The function to rebind
+    * @param context (object) The object in whose context the function should be called
+    */
+    var rebindFunction = function(func,context){
+        return function(){
+            return func.apply(context,arguments);
+        };
+    };
 })(window,document);
