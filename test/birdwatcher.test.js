@@ -338,4 +338,89 @@ $(document).ready(function () {
 
         expect(4);
     });
+
+    test('should wrap thrown objects in a custom Error object when configured to errorize', function () {
+
+        birdwatcher.configuration({
+            errorize:true,
+            rethrow:true,
+            onRethrow:false,
+            onError:function(exp,method){
+                if(method == "donterrorize") {
+                    ok(exp instanceof Error);
+                } else if(method == "errorize") {
+                    ok(exp instanceof birdwatcher.Error);
+                    ok(typeof exp.error == "object");
+                    ok(exp.error.isError);
+                }
+            }
+        });
+
+        var oneTrickPony = {
+            donterrorize : function(){
+                throw new Error();
+            }
+        };
+
+        var secondOneTrickPony = {
+            errorize : function(){
+                throw { isError:true };
+            }
+        };
+
+        birdwatcher(oneTrickPony);        
+        birdwatcher(secondOneTrickPony);
+
+        throws(function(){
+            oneTrickPony.donterrorize();
+        });
+
+        throws(function(){
+            secondOneTrickPony.errorize();
+        });
+
+        expect(6);
+    });
+
+    test('should not wrap thrown objects in a custom Error object when configured not to errorize', function () {
+
+        birdwatcher.configuration({
+            errorize:false,
+            rethrow:true,
+            onRethrow:false,
+            onError:function(exp,method){
+                if(method == "originalerror") {
+                    ok(exp instanceof Error);
+                } else if(method == "donterrorize") {
+                    ok(typeof exp == "object");
+                    ok(exp.isError);
+                }
+            }
+        });
+
+        var oneTrickPony = {
+            originalerror : function(){
+                throw new Error();
+            }
+        };
+
+        var secondOneTrickPony = {
+            donterrorize : function(){
+                throw { isError:true };
+            }
+        };
+
+        birdwatcher(oneTrickPony);        
+        birdwatcher(secondOneTrickPony);
+
+        throws(function(){
+            oneTrickPony.originalerror();
+        });
+
+        throws(function(){
+            secondOneTrickPony.donterrorize();
+        });
+
+        expect(5);
+    });
 })

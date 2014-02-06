@@ -148,54 +148,8 @@
         return this;
     };
 
-    /***
-     * Internal functions
-     */
 
-     var createErrorClosure = function (birdwatcheredObj,methodName, method, configuration, birdwatcherObject) {
-                        return function () {
-                            try {
-                                return method.apply(this, arguments);
-                            } catch (o_O) {
-
-                                // Check if there is any operation we may actually have to execute, if not, move along
-                                var noOp = !((configuration.rethrow && typeof configuration.onRethrow == 'function') || typeof configuration.onError == "function");
-                                if(!noOp) {
-
-                                    // We need a new accessor so that we can change it when the exception is errorized
-                                    var err = o_O;
-                                    // If the thrown object isn't an Error and the config says we should errorize it
-                                    if(!(o_O instanceof Error) && configuration.errorize) {
-                                        // figure out the message for the error object
-                                        var message = "Error ["+methodName+":] ";
-                                        if (typeof o_O == "object" && o_O.hasOwnProperty('message') && typeof o_O.message == 'string') {
-                                            message += o_O.message;
-                                        } else if (typeof o_O == "string") {
-                                            message += o_O;
-                                        }
-                                        err = new BirdwatcherError(message,o_O,birdwatcheredObj,methodName);
-                                    }                                    
-
-                                    if(typeof configuration.onError == "function") {
-                                        // call the onError callback in the context of the birdwatcheredObject
-                                        configuration.onError.call(birdwatcheredObj, err,methodName,configuration,birdwatcherObject);
-                                    }
-
-                                    // Should we rethrow the error
-                                    if (configuration.rethrow === true) {
-                                        // if a callback has been specified before the error needs to be rethrown - call it
-                                        if (typeof configuration.onRethrow == 'function') {
-                                            configuration.onRethrow.call(birdwatcheredObj, err,methodName,configuration,birdwatcherObject);
-                                        }
-                                        throw err;
-                                    }
-                                }
-                            }
-                        };
-
-                    };
-
-     var BirdwatcherError = function(message,originalError,srcObject,method){
+     var BirdwatcherError = brdwtch.Error = function(message,originalError,srcObject,method){
         this.name = "BirdwatcherError";
         this.error = originalError;
         this.target = {
@@ -204,6 +158,53 @@
         };
      };
      BirdwatcherError.prototype = Error.prototype;
+
+    /***
+     * Internal functions
+     */
+
+     var createErrorClosure = function (birdwatcheredObj,methodName, method, configuration, birdwatcherObject) {
+        return function () {
+            try {
+                return method.apply(this, arguments);
+            } catch (o_O) {
+
+                // Check if there is any operation we may actually have to execute, if not, move along
+                var noOp = !(configuration.rethrow || typeof configuration.onError == "function");
+                if(!noOp) {
+
+                    // We need a new accessor so that we can change it when the exception is errorized
+                    var err = o_O;
+                    // If the thrown object isn't an Error and the config says we should errorize it
+                    if(!(o_O instanceof Error) && configuration.errorize) {
+                        // figure out the message for the error object
+                        var message = "Error ["+methodName+":] ";
+                        if (typeof o_O == "object" && o_O.hasOwnProperty('message') && typeof o_O.message == 'string') {
+                            message += o_O.message;
+                        } else if (typeof o_O == "string") {
+                            message += o_O;
+                        }
+                        err = new BirdwatcherError(message,o_O,birdwatcheredObj,methodName);
+                    }                                    
+
+                    if(typeof configuration.onError == "function") {
+                        // call the onError callback in the context of the birdwatcheredObject
+                        configuration.onError.call(birdwatcheredObj, err,methodName,configuration,birdwatcherObject);
+                    }
+
+                    // Should we rethrow the error
+                    if (configuration.rethrow === true) {
+                        // if a callback has been specified before the error needs to be rethrown - call it
+                        if (typeof configuration.onRethrow == 'function') {
+                            configuration.onRethrow.call(birdwatcheredObj, err,methodName,configuration,birdwatcherObject);
+                        }
+                        throw err;
+                    }
+                }
+            }
+        };
+
+    };
 
     /***
      * Borrowed from Underscore++ ( https://github.com/gmmorris/underscorepp ) as I didn't want to make birdwatcher dependant on Underscore++
