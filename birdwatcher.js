@@ -20,7 +20,7 @@
      * error thrown by them.
      * If an error is raised by the method, it is caught and can be dealt with.
      *
-     * Best on the Exception handling anti-pattern by Nicholas C. Zakas (MIT Licensed)
+     * Based on the Exception handling anti-pattern by Nicholas C. Zakas (MIT Licensed)
      * @link http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/
      *
      * @param birdwatcheredObj (object) The object we wish to add error handling to.
@@ -28,7 +28,6 @@
      */
     brdwtch = window.birdwatcher = function(birdwatcheredObj,config){
         if (typeof birdwatcheredObj == 'object') {
-
             /**
              * Merge the specific configuration for this object with the global birdwatcher configuration
              * so that the birdwatcher handler function has a single config object to use
@@ -55,51 +54,37 @@
                                 return method.apply(this, arguments);
                             } catch (o_O) {
 
-                                var exception = {
-                                    message :'The method "' + methodName + '" raised the following error: ',
-                                    method  :methodName
-                                };
-
-                                if (typeof o_O == 'object') {
-                                    if (o_O.hasOwnProperty('message') && typeof o_O.message == 'string') {
-                                        exception.message += o_O.message;
-                                    }
-
-                                    if(configuration.addStackTrace) {
-                                        try {
-                                            exception.stack = [];
-                                            // Webkit
-                                            retrieveStackTrace(exception,'stack');
-                                            // FF
-                                            retrieveStackTrace(exception,'stacktrace');
-                                        } catch (exc) {
-                                            // Stack trace retrieval failed, nothing more to do here
+                                // Check if there is any operation we may actually have to execute, if not, move along
+                                var noOp = !((configuration.rethrow && typeof configuration.onRethrow == 'function') || typeof configuration.onError == "function");
+                                if(!noOp) {
+                                    if(!(o_O instanceof Error) && configuration.errorize) {
+                                        var message = "Error ["+methodName+":] ";
+                                        if (typeof o_O == "object" && o_O.hasOwnProperty('message') && typeof o_O.message == 'string') {
+                                            message += o_O.message;
+                                        } else if (typeof o_O == "string") {
+                                            message += o_O;
                                         }
+                                        o_O = new BirdwatcherError(message,o_O,birdwatcheredObj,methodName);
+                                    }                                    
+
+                                    if(typeof configuration.onError == "function") {
+                                        // call the onError callback in the context of the birdwatcheredObject
+                                        configuration.onError.call(birdwatcheredObj, o_O,methodName,configuration,birdwatcherObject);
                                     }
 
-                                } else if (typeof o_O == 'string') {
-                                    exception.message += o_O;
-                                } else {
-                                    exception.message += ' UNKNOWN';
-                                }
-
-                                if(typeof configuration.onError == "function") {
-                                    // call the onError callback in the context of the birdwatcheredObject
-                                    configuration.onError.call(birdwatcheredObj, exception,methodName,configuration,birdwatcherObject);
-                                }
-
-                                // Should we rethrow the error
-                                if (configuration.rethrow) {
-                                    // if a callback has been specified before the error needs to be rethrown - call it
-                                    if (typeof configuration.onRethrow == 'function') {
-                                        configuration.onRethrow.call(birdwatcheredObj, o_O, exception,methodName,configuration,birdwatcherObject);
+                                    // Should we rethrow the error
+                                    if (configuration.rethrow === true) {
+                                        // if a callback has been specified before the error needs to be rethrown - call it
+                                        if (typeof configuration.onRethrow == 'function') {
+                                            configuration.onRethrow.call(birdwatcheredObj, o_O,methodName,configuration,birdwatcherObject);
+                                        }
+                                        throw o_O;
                                     }
-                                    throw o_O;
                                 }
                             }
                         };
 
-                    })(birdwatcheredObj,prop, method, config, this);
+                    })(birdwatcheredObj,prop, method, config, brdwtch);
                 }
             }
             return true;
@@ -108,14 +93,16 @@
     };
 
     // Current version of the utility.
-    brdwtch.VERSION = '0.1.0';
+    brdwtch.VERSION = '0.2.0';
 
     // The default configuration
     var birdwatcherConfig = {
+
         /***
-         * addStackTrace (boolean) When an error is raised, should birdwatcher try to include a stack trace on the exception object?
-         */
-        addStackTrace: false,
+        * errorize (boolean) If a watched function throws a non Error should the originally thrown object be wrapped 
+        * by a custom Error object?
+        */
+        errorize: true,
 
         /***
          * onError (function) A callback to be called by the birdwatcher when an error occurs.
@@ -198,6 +185,16 @@
      * Internal functions
      */
 
+     var BirdwatcherError = function(message,originalError,srcObject,method){
+        this.name = "BirdwatcherError";
+        this.error = originalError;
+        this.target = {
+            src:srcObject,
+            method:method
+        };
+     };
+     BirdwatcherError.prototype = Error.prototype;
+
     /***
      * Borrowed from Underscore++ ( https://github.com/gmmorris/underscorepp ) as I didn't want to make birdwatcher dependant on Underscore++
      * ===========================
@@ -241,24 +238,4 @@
         }
         return obj;
     }
-
-    /**
-     * Analyze an Error object and try and retrieve a Stack Trace from it.
-     * This doesn't always work, as it is browser specific, but can add valuable
-     * logging information for analysis and is recommended for important and critical operations
-     * @param exp (object) The Error object.
-     * @param propName (String) The stack property name (changes from browser to browser)
-     */
-    var retrieveStackTrace = function (exp,propName) {
-        if (o_O.hasOwnProperty(propName)) {
-            if (typeof o_O[propName] == 'string') {
-                exp.stack.push(o_O[propName]);
-            } else if (typeof o_O[propName] == 'function') {
-                exp.stack.push(o_O[propName].call());
-                if (typeof exp.stack[exp.stack.length - 1] != 'string') {
-                    exp.stack.pop();
-                }
-            }
-        }
-    };
 })(window,document);
