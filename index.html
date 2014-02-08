@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Birdwatcherjs by gmmorris</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/gmmorris/birdwatcherjs">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/gmmorris/birdwatcherjs/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/gmmorris/birdwatcherjs/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Birdwatcherjs</h1>
+          <p>A covert error handling utility for Javascript. A small utility for implementing the NCZ Javascript error handling anti-pattern.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/gmmorris">gmmorris</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a name="birdwatcher-js" class="anchor" href="#birdwatcher-js"><span class="octicon octicon-link"></span></a>Birdwatcher JS</h1>
+
+<p>A small utility for implementing the NCZ JavaScript error handling anti-pattern.
+To understand the anti-pattern: <a href="http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/">http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/</a></p>
+
+<h3>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h3>
+
+<p>To use birdwatcher, all you have to do is tell birdwatcher to spy on an object and set the callback you wish to have called when an error is raised.</p>
+
+<div class="highlight highlight-html"><pre>    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"birdwatcher.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+
+<div class="highlight highlight-js"><pre>    <span class="nb">window</span><span class="p">.</span><span class="nx">theKing</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">giveUpThrone</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">"The king will never be over thrown!"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+
+
+    <span class="nx">birdwatcher</span><span class="p">.</span><span class="nx">configuration</span><span class="p">({</span>
+        <span class="nx">onError</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">exception</span><span class="p">,</span><span class="nx">method</span><span class="p">){</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">method</span> <span class="o">==</span> <span class="s2">"giveUpThrone"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">assassin</span><span class="p">.</span><span class="nx">killKing</span><span class="p">();</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="c1">// some other error took place</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="nx">birdwatcher</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">theKing</span><span class="p">);</span>
+</pre></div>
+
+<h3>
+<a name="advanced-usage" class="anchor" href="#advanced-usage"><span class="octicon octicon-link"></span></a>Advanced usage</h3>
+
+<h4>
+<a name="specifying-different-callbacks-for-a-specific-object" class="anchor" href="#specifying-different-callbacks-for-a-specific-object"><span class="octicon octicon-link"></span></a>Specifying different callbacks for a specific object</h4>
+
+<p>By calling the birdwatcher.configuration() function youcan change the default configuration which is used globally when attaching the birdwatcher functionality to any object.
+If you want to specify a non default configuration variable for a specific object you can override default values of the configuration specifically for the current object when calling the main birdwatcher method by using the second argument.</p>
+
+<div class="highlight highlight-js"><pre>    <span class="nb">window</span><span class="p">.</span><span class="nx">theKing</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">giveUpThrone</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">"The king will never be over thrown!"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="nb">window</span><span class="p">.</span><span class="nx">theAssassin</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">killTheKing</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">injectPoison</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">theKing</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="nx">killThePrince</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">"No women and children!"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="nx">birdwatcher</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">theKing</span><span class="p">);</span>
+    <span class="nx">birdwatcher</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">theAssassin</span><span class="p">,{</span>
+        <span class="nx">onError</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">exception</span><span class="p">,</span><span class="nx">method</span><span class="p">){</span>
+            <span class="c1">// notify the rebels that the assassin has failed</span>
+            <span class="c1">// or rather when theAssassin.killThePrince() is called</span>
+            <span class="c1">// presumably that wasn't prince Joffrey, because that was no child, that was a monster!</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="nx">birdwatcher</span><span class="p">.</span><span class="nx">configuration</span><span class="p">({</span>
+        <span class="nx">onError</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">exception</span><span class="p">,</span><span class="nx">method</span><span class="p">){</span>
+            <span class="c1">// all other error which were raised</span>
+
+            <span class="k">if</span><span class="p">(</span><span class="nx">method</span> <span class="o">==</span> <span class="s2">"giveUpThrone"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">//will be called when the king is challenged to give up the throne</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="watching-a-single-function" class="anchor" href="#watching-a-single-function"><span class="octicon octicon-link"></span></a>Watching a single function</h4>
+
+<p>If you wish to plug a specific method of an object or a function variable into the birdwatcher mechanism you can call the main birdwatcher function and pass the specific method/variable as the first argument, same as with an object.
+Note though, that in order to call the function variable you will have to replace the reference you have to it manually.</p>
+
+<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">myErrorHandledFunction</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="c1">// ...</span>
+    <span class="p">};</span>
+
+    <span class="kd">var</span> <span class="nx">myObject</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">myErrorHandledMethod</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="c1">// ...</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="nx">myErrorHandledFunction</span> <span class="o">=</span> <span class="nx">birdwatcher</span><span class="p">(</span><span class="nx">myErrorHandledFunction</span><span class="p">);</span>
+    <span class="nx">myObject</span><span class="p">.</span><span class="nx">myErrorHandledMethod</span> <span class="o">=</span> <span class="nx">birdwatcher</span><span class="p">(</span><span class="nx">myObject</span><span class="p">.</span><span class="nx">myErrorHandledMethod</span><span class="p">);</span>
+</pre></div>
+
+<h4>
+<a name="preventing-a-rethrow" class="anchor" href="#preventing-a-rethrow"><span class="octicon octicon-link"></span></a>Preventing a rethrow</h4>
+
+<p>The default is to rethrow an error once it is caught, so that the normal error flow can be maintained even when an error
+is caught for special usages (such as logging).
+You cen prevent the rethrow from happening by setting the rethrow config to false.
+This can be used globally or at a single object's level.</p>
+
+<div class="highlight highlight-js"><pre>    <span class="nx">birdwatcher</span><span class="p">.</span><span class="nx">configuration</span><span class="p">({</span>
+        <span class="nx">rethrow</span><span class="o">:</span><span class="kc">false</span>
+    <span class="p">});</span>
+</pre></div>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
