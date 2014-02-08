@@ -30,13 +30,14 @@
      * @param config (object, optional) Spetial configurations to take into account for this particular object
      */
     brdwtch = window.birdwatcher = function(birdwatcheredObj,config){
+        /**
+        * Merge the specific configuration for this object with the global birdwatcher configuration
+        * so that the birdwatcher handler function has a single config object to use
+        */
+        config = config || {};
+        config = extendTopDown(config,birdwatcherConfig);
+			
         if (typeof birdwatcheredObj == 'object') {
-            /**
-             * Merge the specific configuration for this object with the global birdwatcher configuration
-             * so that the birdwatcher handler function has a single config object to use
-             */
-            config = config || {};
-            config = extendTopDown(config,birdwatcherConfig);
 
             // Cycle through the object's properties and find the methods (functions)
             for (var prop in birdwatcheredObj) {
@@ -54,8 +55,10 @@
                     birdwatcheredObj[prop] = createErrorClosure(birdwatcheredObj,prop, method, config, brdwtch);
                 }
             }
-            return true;
-        }
+            return birdwatcheredObj;
+        } else if (typeof birdwatcheredObj == 'function') {
+            return createErrorClosure(window,'', birdwatcheredObj, config, brdwtch);
+        } 
         return false;
     };
 

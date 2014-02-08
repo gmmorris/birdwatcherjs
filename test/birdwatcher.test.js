@@ -423,4 +423,35 @@ $(document).ready(function () {
 
         expect(5);
     });
+
+    test('should be work on a function variable', function () {
+
+        birdwatcher.configuration({
+            onError:function(){
+                ok(true);
+            }
+        });
+
+        var oneTrickPony = {
+            trick : function(){
+                throw new Error();
+            }
+        };
+		var secondTrickPony = function(){
+            throw new Error();			
+		};
+
+        oneTrickPony.trick = birdwatcher(oneTrickPony.trick);
+        secondTrickPony = birdwatcher(secondTrickPony);
+
+        throws(function(){
+            oneTrickPony.trick();
+        });
+
+        throws(function(){
+            secondTrickPony();
+        });
+		
+        expect(4);
+    });
 })

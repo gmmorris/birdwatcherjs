@@ -19,7 +19,6 @@ To use birdwatcher, all you have to do is tell birdwatcher to spy on an object a
         }
     };
 
-    birdwatcher(window.theKing);
 
     birdwatcher.configuration({
         onError:function(exception,method){
@@ -30,6 +29,8 @@ To use birdwatcher, all you have to do is tell birdwatcher to spy on an object a
             }
         }
     });
+
+    birdwatcher(window.theKing);
 ```
 
 
@@ -37,8 +38,8 @@ To use birdwatcher, all you have to do is tell birdwatcher to spy on an object a
 
 #### Specifying different callbacks for a specific object
 
-If the global Underscore variable isn't available (if you're using it in noConflict mode) then you can extend it manually by using the global '_pp' variable that is added by the script.
-
+By calling the birdwatcher.configuration() function youcan change the default configuration which is used globally when attaching the birdwatcher functionality to any object.
+If you want to specify a non default configuration variable for a specific object you can override default values of the configuration specifically for the current object when calling the main birdwatcher method by using the second argument.
 
 ```js
     window.theKing = {
@@ -74,6 +75,26 @@ If the global Underscore variable isn't available (if you're using it in noConfl
             }
         }
     });
+```
+
+#### Watching a single function
+
+If you wish to plug a specific method of an object or a function variable into the birdwatcher mechanism you can call the main birdwatcher function and pass the specific method/variable as the first argument, same as with an object.
+Note though, that in order to call the function variable you will have to replace the reference you have to it manually.
+
+```js
+    var myErrorHandledFunction = function(){
+		// ...
+	};
+	
+    var myObject = {
+		myErrorHandledMethod : function(){
+			// ...
+		}
+	};
+
+    myErrorHandledFunction = birdwatcher(myErrorHandledFunction);
+    myObject.myErrorHandledMethod = birdwatcher(myObject.myErrorHandledMethod);
 ```
 
 #### Preventing a rethrow
