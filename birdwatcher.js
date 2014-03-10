@@ -223,12 +223,15 @@
                         configuration.onError.call(birdwatcheredObj, err,name,uniqueId,methodName,configuration,birdwatcherObject);
                     }
 
-                    // Should we rethrow the error
+                    // Should we onRethrow the error
                     if (configuration.rethrow === true) {
                         // if a callback has been specified before the error needs to be rethrown - call it
                         if (typeof configuration.onRethrow == 'function') {
                             configuration.onRethrow.call(birdwatcheredObj, err,name,uniqueId,methodName,configuration,birdwatcherObject);
                         }
+						if(typeof err == 'object') {
+							err.rethrownByBirdwatcher = true;
+						}
                         throw err;
                     }
                 }
