@@ -29,7 +29,24 @@
      * @param birdwatcheredObj (object) The object we wish to add error handling to.
      * @param config (object, optional) Spetial configurations to take into account for this particular object
      */
-    brdwtch = window.birdwatcher = function(birdwatcheredObj,config){
+    brdwtch = window.birdwatcher = function(birdwatcheredObj,name, uniqueId, config){
+		
+		if(typeof name == 'object') {
+			config = name;
+			uniqueId = null;
+			name = null;
+		} else if(typeof uniqueId == 'object') {
+			config = uniqueId;			
+			uniqueId = null;
+		} else {
+			if(typeof uniqueId != 'string') {
+				uniqueId = null;
+			}
+			if(typeof name != 'string') {
+				uniqueId = null;
+			}
+		}
+		
         /**
         * Merge the specific configuration for this object with the global birdwatcher configuration
         * so that the birdwatcher handler function has a single config object to use
@@ -52,18 +69,20 @@
                      * who goes around telling everyone who he is and what his favorite drink is.
                      * Worst. Spy. Ever.)
                      */
-                    birdwatcheredObj[prop] = createErrorClosure(birdwatcheredObj,prop, method, config, brdwtch);
+                    birdwatcheredObj[prop] = createErrorClosure(birdwatcheredObj,name,uniqueId, prop, method, config, brdwtch);
                 }
             }
             return birdwatcheredObj;
         } else if (typeof birdwatcheredObj == 'function') {
-            return createErrorClosure(window,'', birdwatcheredObj, config, brdwtch);
+			// If this is a function and not an object then the method doesn't actually have a name
+			// If a name is specified as an argument then we can use that to identify the unnamed function
+            return createErrorClosure(window,name,uniqueId, '', birdwatcheredObj, config, brdwtch);
         } 
         return false;
     };
 
     // Current version of the utility.
-    brdwtch.VERSION = '0.2.0';
+    brdwtch.VERSION = '0.3.0';
 
     // The default configuration
     var birdwatcherConfig = {
@@ -152,11 +171,13 @@
     };
 
 
-     var BirdwatcherError = brdwtch.Error = function(message,originalError,srcObject,method){
+     var BirdwatcherError = brdwtch.Error = function(message,originalError,srcObject,srcObjectName,uniqueId,method){
         this.name = "BirdwatcherError";
         this.error = originalError;
-        this.target = {
+        this.src = {
             src:srcObject,
+			name :srcObjectName,
+			id: uniqueId,
             method:method
         };
      };
@@ -166,7 +187,8 @@
      * Internal functions
      */
 
-     var createErrorClosure = function (birdwatcheredObj,methodName, method, configuration, birdwatcherObject) {
+     var createErrorClosure = function (birdwatcheredObj,name,uniqueId,methodName, method, configuration, birdwatcherObject) {
+		 
         return function () {
             try {
                 return method.apply(this, arguments);
@@ -181,25 +203,31 @@
                     // If the thrown object isn't an Error and the config says we should errorize it
                     if(!(o_O instanceof Error) && configuration.errorize) {
                         // figure out the message for the error object
-                        var message = "Error ["+methodName+":] ";
+						// If a name is specified we opt for a message which is labeled thas: [NAME:METHOD]
+						// If a Unique ID is specified as weel then [NAME(UNIQUEID):METHOD]
+						// If a unique ID is specified, but no name [(UNIQUEID):METHOD]
+						var message = (uniqueId !== null? "("+uniqueId + ")" : '');
+						message = (name !== null? name + message : message);
+                        message = "Error ["+(message !== ''? message + ":" : "")+methodName+"] ";
+						
                         if (typeof o_O == "object" && o_O.hasOwnProperty('message') && typeof o_O.message == 'string') {
                             message += o_O.message;
                         } else if (typeof o_O == "string") {
                             message += o_O;
                         }
-                        err = new BirdwatcherError(message,o_O,birdwatcheredObj,methodName);
+                        err = new BirdwatcherError(message,o_O,birdwatcheredObj,name,uniqueId,methodName);
                     }                                    
 
                     if(typeof configuration.onError == "function") {
                         // call the onError callback in the context of the birdwatcheredObject
-                        configuration.onError.call(birdwatcheredObj, err,methodName,configuration,birdwatcherObject);
+                        configuration.onError.call(birdwatcheredObj, err,name,uniqueId,methodName,configuration,birdwatcherObject);
                     }
 
                     // Should we rethrow the error
                     if (configuration.rethrow === true) {
                         // if a callback has been specified before the error needs to be rethrown - call it
                         if (typeof configuration.onRethrow == 'function') {
-                            configuration.onRethrow.call(birdwatcheredObj, err,methodName,configuration,birdwatcherObject);
+                            configuration.onRethrow.call(birdwatcheredObj, err,name,uniqueId,methodName,configuration,birdwatcherObject);
                         }
                         throw err;
                     }

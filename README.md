@@ -21,7 +21,7 @@ To use birdwatcher, all you have to do is tell birdwatcher to spy on an object a
 
 
     birdwatcher.configuration({
-        onError:function(exception,method){
+        onError:function(exception,name, id, method){
             if(method == "giveUpThrone") {
                 assassin.killKing();
             } else {
@@ -57,9 +57,9 @@ If you want to specify a non default configuration variable for a specific objec
         }
     };
 
-    birdwatcher(window.theKing);
-    birdwatcher(window.theAssassin,{
-        onError:function(exception,method){
+    birdwatcher(window.theKing,"King");
+    birdwatcher(window.theAssassin,"Assasin","BlackAdder",{
+        onError:function(exception,name, id, method){
             // notify the rebels that the assassin has failed
             // or rather when theAssassin.killThePrince() is called
             // presumably that wasn't prince Joffrey, because that was no child, that was a monster!
@@ -67,10 +67,10 @@ If you want to specify a non default configuration variable for a specific objec
     });
 
     birdwatcher.configuration({
-        onError:function(exception,method){
+        onError:function(exception,name, id, method){
             // all other error which were raised
 
-            if(method == "giveUpThrone") {
+            if(name == "King" && method == "giveUpThrone") {
                 //will be called when the king is challenged to give up the throne
             }
         }

@@ -259,7 +259,7 @@ $(document).ready(function () {
     test('should be used for single object but default for others', function () {
 
         birdwatcher.configuration({
-            onError:function(exp,method){
+            onError:function(exp,name,id, method){
                 if(method == "shouldCall") {
                     ok(true);
                 } else {
@@ -281,7 +281,7 @@ $(document).ready(function () {
         };
 
         birdwatcher(oneTrickPony,{
-            onError:function(exp,method){
+            onError:function(exp,name,id, method){
                 if(method == "trick") {
                     ok(true);
                 } else {
@@ -305,10 +305,10 @@ $(document).ready(function () {
     test('should bubble errors for all object except the specific one', function () {
 
         birdwatcher.configuration({
-            onRethrow:function(exp,method){
+            onRethrow:function(exp,name,id, method){
                 ok(true);
             },
-            onError:function(exp,method){
+            onError:function(exp,name,id, method){
                 ok(true);
             }
         });
@@ -345,7 +345,7 @@ $(document).ready(function () {
             errorize:true,
             rethrow:true,
             onRethrow:false,
-            onError:function(exp,method){
+            onError:function(exp,name,id, method){
                 if(method == "donterrorize") {
                     ok(exp instanceof Error);
                 } else if(method == "errorize") {
@@ -388,7 +388,7 @@ $(document).ready(function () {
             errorize:false,
             rethrow:true,
             onRethrow:false,
-            onError:function(exp,method){
+            onError:function(exp,name,id, method){
                 if(method == "originalerror") {
                     ok(exp instanceof Error);
                 } else if(method == "donterrorize") {
@@ -428,7 +428,7 @@ $(document).ready(function () {
 
         birdwatcher.configuration({
             onError:function(){
-                ok(true);
+                ok(true); // should run twice
             }
         });
 
