@@ -31,18 +31,18 @@
      */
     brdwtch = window.birdwatcher = function(birdwatcheredObj,name, uniqueId, config){
 		
-		if(typeof name == 'object') {
+		if(typeof name === 'object' && name !== null) {
 			config = name;
 			uniqueId = null;
 			name = null;
-		} else if(typeof uniqueId == 'object') {
+		} else if(typeof uniqueId === 'object' && uniqueId !== null) {
 			config = uniqueId;			
 			uniqueId = null;
 		} else {
-			if(typeof uniqueId != 'string') {
+			if(typeof uniqueId !== 'string') {
 				uniqueId = null;
 			}
-			if(typeof name != 'string') {
+			if(typeof name !== 'string') {
 				uniqueId = null;
 			}
 		}
