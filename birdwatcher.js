@@ -1,7 +1,7 @@
 /**
  * @name birdwatcher.js
  * @author Gidi Meir Morris, 2014
- * @version 0.4.1
+ * @version 0.4.2
  * 
  * Birdwatcher (Slang) A spy, usually used in the UK.
  * 
@@ -82,7 +82,7 @@
     };
 
     // Current version of the utility.
-    brdwtch.VERSION = '0.4.1';
+    brdwtch.VERSION = '0.4.2';
 
     // The default configuration
     var birdwatcherConfig = {
@@ -199,7 +199,7 @@
                 if(!noOp) {
 
                     // We need a new accessor so that we can change it when the exception is errorized
-                    var err = o_O;
+                    var err = o_O, args = Array.prototype.slice.call(arguments);
                     // If the thrown object isn't an Error and the config says we should errorize it
                     if(!(o_O instanceof Error) && configuration.errorize) {
                         // figure out the message for the error object
@@ -220,14 +220,14 @@
 
                     if(typeof configuration.onError == "function") {
                         // call the onError callback in the context of the birdwatcheredObject
-                        configuration.onError.call(birdwatcheredObj, err,name,uniqueId,methodName,arguments,configuration,birdwatcherObject);
+                        configuration.onError.call(birdwatcheredObj, err,name,uniqueId,methodName,args,configuration,birdwatcherObject);
                     }
 
                     // Should we onRethrow the error
                     if (configuration.rethrow === true) {
                         // if a callback has been specified before the error needs to be rethrown - call it
                         if (typeof configuration.onRethrow == 'function') {
-                            configuration.onRethrow.call(birdwatcheredObj, err,name,uniqueId,methodName,arguments,configuration,birdwatcherObject);
+                            configuration.onRethrow.call(birdwatcheredObj, err,name,uniqueId,methodName,args,configuration,birdwatcherObject);
                         }
 						if(typeof err == 'object') {
 							err.rethrownByBirdwatcher = true;
