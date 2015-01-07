@@ -1,7 +1,7 @@
 /**
  * @name birdwatcher.js
  * @author Gidi Meir Morris, 2014
- * @version 0.1
+ * @version 0.4.0
  * 
  * Birdwatcher (Slang) A spy, usually used in the UK.
  * 
@@ -82,7 +82,7 @@
     };
 
     // Current version of the utility.
-    brdwtch.VERSION = '0.3.0';
+    brdwtch.VERSION = '0.4.0';
 
     // The default configuration
     var birdwatcherConfig = {
@@ -220,14 +220,14 @@
 
                     if(typeof configuration.onError == "function") {
                         // call the onError callback in the context of the birdwatcheredObject
-                        configuration.onError.call(birdwatcheredObj, err,name,uniqueId,methodName,configuration,birdwatcherObject);
+                        configuration.onError.call(birdwatcheredObj, err,name,uniqueId,methodName,configuration,arguments,birdwatcherObject);
                     }
 
                     // Should we onRethrow the error
                     if (configuration.rethrow === true) {
                         // if a callback has been specified before the error needs to be rethrown - call it
                         if (typeof configuration.onRethrow == 'function') {
-                            configuration.onRethrow.call(birdwatcheredObj, err,name,uniqueId,methodName,configuration,birdwatcherObject);
+                            configuration.onRethrow.call(birdwatcheredObj, err,name,uniqueId,methodName,configuration,arguments,birdwatcherObject);
                         }
 						if(typeof err == 'object') {
 							err.rethrownByBirdwatcher = true;
