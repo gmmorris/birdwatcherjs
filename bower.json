@@ -1,6 +1,6 @@
 {
     "name": "birdwatcher",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "main": "birdwatcher.js",
     "devDependencies": {
         "qunit" : "latest"
