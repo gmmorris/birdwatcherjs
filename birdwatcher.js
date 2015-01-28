@@ -97,7 +97,7 @@
 	};
 
 	// Current version of the utility.
-	brdwtch.VERSION = '0.4.2';
+	brdwtch.VERSION = '0.4.3';
 
 	// The default configuration
 	var birdwatcherConfig = {
