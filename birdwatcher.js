@@ -27,7 +27,7 @@
 	 * @link http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/
 	 *
 	 * @param birdwatcheredObj (object) The object we wish to add error handling to.
-	 * @param config (object, optional) Spetial configurations to take into account for this particular object
+	 * @param config (object, optional) Special configurations to take into account for this particular object
 	 */
 	brdwtch = window.birdwatcher = function (birdwatcheredObj, name, uniqueId, config) {
 
@@ -62,7 +62,14 @@
 				// If a name is specified as an argument then we can use that to identify the unnamed function
 
 				// functions are wrapped, so we have a new funciton in memory to point to and return
-				returnObject = createErrorClosure(window, name, uniqueId, '', birdwatcheredObj, config, brdwtch);
+				if(config.watchFunction){
+					// don't wrap a function unless watchFunction is True (which is the default)
+					returnObject = createErrorClosure(window, name, uniqueId, '', birdwatcheredObj, config, brdwtch);
+				} else {
+					// return the original function. This is useful for when we're wrapping the child properties of this function
+					// but not the actual function.
+					returnObject = birdwatcheredObj;
+				}
 			} else {
 				// objects aren't wrapped, but rather their properties are, so we return a new pointer 'returnObject' which
 				// points to the same object in memory
@@ -97,7 +104,7 @@
 	};
 
 	// Current version of the utility.
-	brdwtch.VERSION = '0.4.3';
+	brdwtch.VERSION = '0.4.4';
 
 	// The default configuration
 	var birdwatcherConfig = {
@@ -165,7 +172,21 @@
 		 * By default we wrap the object's entire behaviour, so we tell it to ignore 'hasOwnProperty' and watch all properties in the prototype chain.
 		 * By setting this to False we can limit the depth to only this object's direct properties rather than go deeper into the prototype chain.
 		 */
-		watchDeep : true
+		watchDeep : true,
+
+		/***
+		 * Should a function which is sent to Birdwatcher be watched?
+		 * This seems trivial - if we don't want the funciton watched, then why send it to Birdwatcher in the first place?
+		 * The reason is that we might want to add a watcher on the Property Functions that this function has but don't want the actual function watched.
+		 * This configuration is ignored by regular objects, and is only really relevant to function which have other functions as properties on them, otherwise
+		 * its a NoOp.
+		 * This configuration is for a very specific use case - when the function we're warpping is used throughout a system and has other references to the original
+		 * function and we don't have a way of replacing those references. An example of where this would be common is with a module managment system where we wish to add
+		 * Birdwatching capabilities to a module which is already defined in the module manager, so we can add wrapping to it's static functions but can't replace the
+		 * reference to the original function stored in the module manager. Ideally this wouldn't happen as the original object would be Birdwatched in the first
+		 * place, but that isn't always an option.
+		 */
+		watchFunction : true
 	};
 
 
