@@ -54,29 +54,44 @@
 		config = config || {};
 		config = extendTopDown(config, birdwatcherConfig);
 
-		if (typeof birdwatcheredObj === 'object') {
+		var returnObject;
+		if (typeof birdwatcheredObj === 'object' || typeof birdwatcheredObj === 'function') {
 
-			// Cycle through the object's properties and find the methods (functions)
-			for (var prop in birdwatcheredObj) {
-				var method = birdwatcheredObj[prop];
-				if (typeof method === "function") {
-					/**
-					 * Create a cloure which will be called instead of the existing method on the birdwatchered object.
-					 * Usually it will simply add a call for the method and return it's value, as usual.
-					 * This is a completly covert operation... the object being birdwatchered doesn't even know
-					 * it has a spy on its ass.
-					 * This is the Jason Bourne of functions (not to be confused with James Bond
-					 * who goes around telling everyone who he is and what his favorite drink is.
-					 * Worst. Spy. Ever.)
-					 */
-					birdwatcheredObj[prop] = createErrorClosure(birdwatcheredObj, name, uniqueId, prop, method, config, brdwtch);
+			if (typeof birdwatcheredObj === 'function') {
+				// If this is a function and not an object then the method doesn't actually have a name
+				// If a name is specified as an argument then we can use that to identify the unnamed function
+
+				// functions are wrapped, so we have a new funciton in memory to point to and return
+				returnObject = createErrorClosure(window, name, uniqueId, '', birdwatcheredObj, config, brdwtch);
+			} else {
+				// objects aren't wrapped, but rather their properties are, so we return a new pointer 'returnObject' which
+				// points to the same object in memory
+				returnObject = birdwatcheredObj;
+			}
+
+			// watch props if config is true or is an object and not forcfully prevented by the config
+			if(config.watchProperties === true || (config.watchProperties !== false && typeof birdwatcheredObj === 'object')) {
+				// Cycle through the object's properties and find the methods (functions)
+				for (var prop in birdwatcheredObj) {
+					if(config.watchDeep || birdwatcheredObj.hasOwnProperty(prop)){
+						var method = birdwatcheredObj[prop];
+						if (typeof method === "function") {
+							/**
+							 * Create a cloure which will be called instead of the existing method on the birdwatchered object.
+							 * Usually it will simply add a call for the method and return it's value, as usual.
+							 * This is a completly covert operation... the object being birdwatchered doesn't even know
+							 * it has a spy on its ass.
+							 * This is the Jason Bourne of functions (not to be confused with James Bond
+							 * who goes around telling everyone who he is and what his favorite drink is.
+							 * Worst. Spy. Ever.)
+							 */
+							returnObject[prop] = createErrorClosure(birdwatcheredObj, name, uniqueId, prop, method, config, brdwtch);
+						}
+					}
 				}
 			}
-			return birdwatcheredObj;
-		} else if (typeof birdwatcheredObj === 'function') {
-			// If this is a function and not an object then the method doesn't actually have a name
-			// If a name is specified as an argument then we can use that to identify the unnamed function
-			return createErrorClosure(window, name, uniqueId, '', birdwatcheredObj, config, brdwtch);
+
+			return returnObject;
 		}
 		return false;
 	};
@@ -123,7 +138,34 @@
 		 * birdwatcher (Object) The actual birdwatcher utility.
 		 * The context callback will be the actual object which raised the error, meaning thatthe keyword 'this' can be used to access it.
 		 */
-		onRethrow: null
+		onRethrow: null,
+
+		/****
+		 * watchFunctionProperties (boolean, options) Should the properties of the birdwatched object be investigated?
+		 * This may seem trivial, as watching properties is what Birdwatcher is all about, no? Well, not neceserily.
+		 * The intent behind Birdwatcher is to wrap all the properties of a regualr JS object, but what about a JS function?
+		 * A JS function should just be wrapped and returned in it's wraped state to be called manually by the library user
+		 * But sometime, especially with independant components, you will have a function which acts as a constructor or utility, and on
+		 * it there will be more JS functions which act a a sort of static method (jQuery is a great example of this, where $ is a function,
+		 * and calling $("#whatever") with some input returns an object which has it's own methods,  but you can also call "static" jQuery
+		 * functions, such as $.noConflict(). WHat if we wanted to Birdwatch our $ function but also it's noConflict (and other static functions) function?
+		 * Thats where watchProperties comes in.
+		 * If watchProperties is ir's default 'null', then for regular JS Objects we will assume that watchProperties is True, and for JS FUnctions we
+		 * will assume that watchProperties is False. But, if we have a cse like jQuery, then we wil set watchProperties to true and then both the main
+		 * function "$" will be watched and it's property functions such as noConflict.
+		 * Setting True or False will override this default, so setting True will always wrap the properties and False will never wrap properties (which for a regular JS Object
+		 * taht is basically a NoOp)
+		 *
+		 */
+		watchProperties : null,
+
+		/***
+		 * watchDeep (boolean) Should Birdwatcher search for all the functions on an Birdwatched object or just the ones directly on the object instance?
+		 * This means, in JS terms, should we add a watcher only to function which return True for 'hasOwnProperty' or should we watch it's prototype's functions too?
+		 * By default we wrap the object's entire behaviour, so we tell it to ignore 'hasOwnProperty' and watch all properties in the prototype chain.
+		 * By setting this to False we can limit the depth to only this object's direct properties rather than go deeper into the prototype chain.
+		 */
+		watchDeep : true
 	};
 
 
