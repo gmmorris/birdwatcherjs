@@ -54,12 +54,12 @@
 		config = config || {};
 		config = extendTopDown(config, birdwatcherConfig);
 
-		if (typeof birdwatcheredObj == 'object') {
+		if (typeof birdwatcheredObj === 'object') {
 
 			// Cycle through the object's properties and find the methods (functions)
 			for (var prop in birdwatcheredObj) {
 				var method = birdwatcheredObj[prop];
-				if (typeof method == "function") {
+				if (typeof method === "function") {
 					/**
 					 * Create a cloure which will be called instead of the existing method on the birdwatchered object.
 					 * Usually it will simply add a call for the method and return it's value, as usual.
@@ -73,7 +73,7 @@
 				}
 			}
 			return birdwatcheredObj;
-		} else if (typeof birdwatcheredObj == 'function') {
+		} else if (typeof birdwatcheredObj === 'function') {
 			// If this is a function and not an object then the method doesn't actually have a name
 			// If a name is specified as an argument then we can use that to identify the unnamed function
 			return createErrorClosure(window, name, uniqueId, '', birdwatcheredObj, config, brdwtch);
@@ -131,13 +131,13 @@
 	 * Get/Set the configuration for the birdwatcher object
 	 * @param config (object,optional) A configuration object with any of the configuration properties
 	 * @example
-	 <code><pre>
-	 birdwatcher.configuration({
-            onError: function(exception,methodName,configuration,birdwatcherObject){
-                console.log(exception.message);
-            }
-         });
-	 </pre></code>
+		<code><pre>
+		birdwatcher.configuration({
+			onError: function(exception,methodName,configuration,birdwatcherObject){
+				console.log(exception.message);
+			}
+		});
+		</pre></code>
 	 */
 	brdwtch.configuration = function (config) {
 		// If an object param is provided - replace the specific properties
@@ -161,9 +161,9 @@
 	 * Revert the global window.birdwatcher variable to it's original value and return this birdwatcher object.
 	 * This allows users to include multiple versions of birdwatcher objects on a single page or another global variable named "birdwatcher".
 	 * @example
-	 <code><pre>
-	 birdwatcher.noConflict();
-	 </pre></code>
+		<code><pre>
+		birdwatcher.noConflict();
+		</pre></code>
 	 */
 	birdwatcher.noConflict = function () {
 		window.birdwatcher = conflictedBirdwatcher;
@@ -195,7 +195,7 @@
 			} catch (o_O) {
 
 				// Check if there is any operation we may actually have to execute, if not, move along
-				var noOp = !(configuration.rethrow || typeof configuration.onError == "function");
+				var noOp = !(configuration.rethrow || typeof configuration.onError === "function");
 				if (!noOp) {
 
 					// We need a new accessor so that we can change it when the exception is errorized
@@ -210,15 +210,15 @@
 						message = (name !== null ? name + message : message);
 						message = "Error [" + (message !== '' ? message + ":" : "") + methodName + "] ";
 
-						if (typeof o_O == "object" && o_O.hasOwnProperty('message') && typeof o_O.message == 'string') {
+						if (typeof o_O === "object" && o_O.hasOwnProperty('message') && typeof o_O.message === 'string') {
 							message += o_O.message;
-						} else if (typeof o_O == "string") {
+						} else if (typeof o_O === "string") {
 							message += o_O;
 						}
 						err = new BirdwatcherError(message, o_O, birdwatcheredObj, name, uniqueId, methodName);
 					}
 
-					if (typeof configuration.onError == "function") {
+					if (typeof configuration.onError === "function") {
 						// call the onError callback in the context of the birdwatcheredObject
 						configuration.onError.call(birdwatcheredObj, err, name, uniqueId, methodName, args, configuration, birdwatcherObject);
 					}
@@ -226,10 +226,10 @@
 					// Should we onRethrow the error
 					if (configuration.rethrow === true) {
 						// if a callback has been specified before the error needs to be rethrown - call it
-						if (typeof configuration.onRethrow == 'function') {
+						if (typeof configuration.onRethrow === 'function') {
 							configuration.onRethrow.call(birdwatcheredObj, err, name, uniqueId, methodName, args, configuration, birdwatcherObject);
 						}
-						if (typeof err == 'object') {
+						if (typeof err === 'object') {
 							err.rethrownByBirdwatcher = true;
 						}
 						throw err;
@@ -258,14 +258,14 @@
 		 */
 		for (var idx = 1; idx < arguments.length; idx++) {
 			var objFrom = arguments[idx];
-			if (typeof objFrom == 'object') {
+			if (typeof objFrom === 'object') {
 				for (var prop in objFrom) {
 					if (objFrom.hasOwnProperty(prop) && !obj.hasOwnProperty(prop)) {
-						if (typeof objFrom[prop] == "function") {
+						if (typeof objFrom[prop] === "function") {
 							// use a closure to call the function within the context of the object
 							// being extended
 							obj[prop] = rebindFunction(objFrom[prop], obj);
-						} else if (typeof objFrom[prop] == "object") {
+						} else if (typeof objFrom[prop] === "object") {
 							// if this property is an object, then extend it using this method as well
 							obj[prop] = extendTopDown({}, objFrom[prop]);
 						} else {
@@ -274,7 +274,7 @@
 					}
 				}
 			} else {
-				throw new Error("Underscore++[extendTopDown method]: All parameters must be Objects, but parameter #" + (index + 1) + " is of type " + typeof objFrom);
+				throw new Error("Underscore++[extendTopDown method]: All parameters must be Objects, but parameter #" + (idx + 1) + " is of type " + typeof objFrom);
 			}
 		}
 		return obj;
