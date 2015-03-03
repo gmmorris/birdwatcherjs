@@ -1,10 +1,10 @@
 {
-    "name": "birdwatcher",
-    "version": "0.4.4",
-    "main": "birdwatcher.js",
-    "devDependencies": {
-        "qunit" : "latest"
-    },
-    "ignore": ["test", ".html"],
-    "keywords": ["birdwatcher","error","handling"]
+	"name": "birdwatcher",
+	"version": "0.4.4",
+	"main": ["birdwatcher.js", "release/birdwatcher.min.js"],
+	"devDependencies": {
+		"qunit": "latest"
+	},
+	"ignore": ["test", ".html"],
+	"keywords": ["birdwatcher", "error", "handling"]
 }
