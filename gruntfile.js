@@ -42,9 +42,24 @@ module.exports = function (grunt) {
 					base: '.'
 				}
 			}
+		},
+		uglify: {
+			release: {
+				options: {
+					mangle: true,
+					beautify : {
+						ascii_only : true,
+						quote_keys: true
+					}
+				},
+				files: {
+					'./release/birdwatcher.min.js': ['birdwatcher.js']
+				}
+			}
 		}
 	});
 
 	grunt.registerTask('test', ['jshint', 'connect', 'qunit']);
 	grunt.registerTask('tdd', ['watch']);
+	grunt.registerTask('build', ['uglify:release']);
 };
