@@ -29,7 +29,7 @@
 	 * @param birdwatcheredObj (object) The object we wish to add error handling to.
 	 * @param config (object, optional) Special configurations to take into account for this particular object
 	 */
-	brdwtch = window.birdwatcher = function (birdwatcheredObj, name, uniqueId, config) {
+	brdwtch = function (birdwatcheredObj, name, uniqueId, config) {
 
 		if (typeof name === 'object' && name !== null) {
 			config = name;
@@ -104,7 +104,7 @@
 	};
 
 	// Current version of the utility.
-	brdwtch.VERSION = '0.4.4';
+	brdwtch.VERSION = '0.5.0';
 
 	// The default configuration
 	var birdwatcherConfig = {
@@ -228,7 +228,7 @@
 		birdwatcher.noConflict();
 		</pre></code>
 	 */
-	birdwatcher.noConflict = function () {
+	brdwtch.noConflict = function () {
 		window.birdwatcher = conflictedBirdwatcher;
 		return this;
 	};
@@ -247,10 +247,34 @@
 	BirdwatcherError.prototype = Error.prototype;
 
 	/***
+	 * Extension functions
+	 */
+	brdwtch.addOn = function (configuration) {
+		if(isValidAdOnConfig(this,configuration)){
+			this.addOns = this.addOns || initAddOns(this);
+			this.addOns.install(configuration.Name,configuration.init(this));
+		}
+		return this;
+	};
+
+	/***
+	 * Externalise
+	 */
+	window.birdwatcher = brdwtch;
+
+	/***
 	 * Internal functions
 	 */
 
 	var createErrorClosure = function (birdwatcheredObj, name, uniqueId, methodName, method, configuration, birdwatcherObject) {
+
+		// pass args through addsOn filters
+		if(birdwatcherObject.addOns){
+			// An addons can change the configuration before it is applied to an object
+			configuration = birdwatcherObject.addOns.each('configureClosure',configuration, birdwatcheredObj);
+			// An addons can wrap the method in any closure it wishes
+			method = birdwatcherObject.addOns.each('errorClosure',method, methodName, configuration);
+		}
 
 		return function () {
 			try {
@@ -279,6 +303,12 @@
 							message += o_O;
 						}
 						err = new BirdwatcherError(message, o_O, birdwatcheredObj, name, uniqueId, methodName);
+
+						// pass args through addsOn filters
+						if(birdwatcherObject.addOns){
+							// An addons can make changes to an Error object which is created by the birdwatcher
+							err = birdwatcherObject.addOns.each('errorized',err, configuration);
+						}
 					}
 
 					if (typeof configuration.onError === "function") {
@@ -355,4 +385,96 @@
 			return func.apply(context, arguments);
 		};
 	};
+
+	var validAddOnEvents = [
+		// Called when an errorClosure is being created. The configuration object which is about to be used for this closure can now be manipulated
+		// and changed by the AddOn
+		'configureClosure',
+		// Called when an errorClosure is being created. The actual method which is about to be wrapped will be passed to the addOn
+		// which will then be expected to return a function which will take the method's place, usually this will be used to wrap the method
+		// execution in another closure
+		'errorClosure',
+		// When an error object is created after an error is caught an AddOn can change that error object and extend it
+		'errorized'
+	];
+	/***
+	 * Check wether a specified config object is valid to be installed as a Birdwatcher AddOn
+	 * @param config
+	 * @returns {boolean}
+	 */
+	var isValidAdOnConfig = function(birdwatcher, config){
+		if(config &&
+			typeof config === 'object' &&
+			// check for unique ID
+			config.hasOwnProperty('Name') && !(birdwatcher.addOns && birdwatcher.addOns.hasOwnProperty(config.Name)) &&
+			// check for init function
+			config.hasOwnProperty('init') && typeof config.init === 'function'){
+			// check all On event handlers
+			if(config.hasOwnProperty('on')){
+				if(!config.on || typeof config.on !== 'object'){
+					return false;
+				}
+				for(var eventName in config.on){
+					if(config.on.hasOwnProperty(eventName) && (typeof config.on[eventName] !== 'function' || indexOf.call(validAddOnEvents,eventName) === -1)){
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		return false;
+	},
+	/***
+	 * Create the AddOns object which will manage any external addOns installed into birdwatcher
+	 * @param birdwatcher
+	 */
+	initAddOns = function(birdwatcher){
+		var addOns = {}, index = [];
+		birdwatcher.addOns = {
+			install : function(name,addOn){
+				addOns[name] = addOn;
+				index.push(addOn);
+			},
+			each : function(event,obj){
+				// args for AddOn event handler is - the object of interest, then any additional args, then the birdwatcher object
+				var args = Array.prototype.slice.call(arguments,1);
+				args.push(birdwatcher);
+				for(var n = 0; n < index.length;n++){
+					if(index[n].hasOwnProperty('on') && index[n].on.hasOwnProperty(event)){
+						// call On Event handler, passing the object of interest, any additional args supplied, the birdwatcher object  and called in the context of the addOn object
+						args[0] = index[n].on[event].apply(index[n],args); // place return val in index of object of interest
+					}
+				}
+				return args[0];
+			}
+		};
+		return birdwatcher.addOns;
+	};
+
+	// Array.indexOf to support older browsers
+	var indexOf = (function(){
+		// Implement ECMA262-5 Array methods if not supported natively
+		// borrowed from: http://stackoverflow.com/questions/2790001/fixing-javascript-array-functions-in-internet-explorer-indexof-foreach-etc
+		if (!('indexOf' in Array.prototype)) {
+			return function(find, i /*opt*/) {
+				if (i === undefined){
+					i= 0;
+				}
+				if (i<0) {
+					i+= this.length;
+				}
+				if (i<0) {
+					i= 0;
+				}
+				for (var n= this.length; i<n; i++) {
+					if (i in this && this[i]===find) {
+						return i;
+					}
+				}
+				return -1;
+			};
+		} else {
+			return Array.prototype.indexOf;
+		}
+	})();
 })(window, document);
