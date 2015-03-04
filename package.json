@@ -1,7 +1,7 @@
 {
 	"name": "BirdwatcherJS",
 	"description": "A covert error handling utility for Javascript. A small utility for implementing the NCZ JavaScript error handling anti-pattern",
-	"version": "0.5.0",
+	"version": "0.5.1",
 	"author": "Gidi Meir Morris",
 	"repository": {
 		"type": "git",

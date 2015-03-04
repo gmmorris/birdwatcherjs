@@ -252,9 +252,9 @@
 	brdwtch.addOn = function (configuration) {
 		if(isValidAdOnConfig(this,configuration)){
 			this.addOns = this.addOns || initAddOns(this);
-			this.addOns.install(configuration.Name,configuration.init(this));
+			return this.addOns.install(configuration.Name,configuration.init(this));
 		}
-		return this;
+		return false;
 	};
 
 	/***
@@ -271,7 +271,7 @@
 		// pass args through addsOn filters
 		if(birdwatcherObject.addOns){
 			// An addons can change the configuration before it is applied to an object
-			configuration = birdwatcherObject.addOns.each('configureClosure',configuration, birdwatcheredObj);
+			configuration = birdwatcherObject.addOns.each('configureClosure',configuration, name, uniqueId, methodName,birdwatcheredObj);
 			// An addons can wrap the method in any closure it wishes
 			method = birdwatcherObject.addOns.each('errorClosure',method, methodName, configuration);
 		}
@@ -434,6 +434,7 @@
 			install : function(name,addOn){
 				addOns[name] = addOn;
 				index.push(addOn);
+				return addOn;
 			},
 			each : function(event,obj){
 				// args for AddOn event handler is - the object of interest, then any additional args, then the birdwatcher object
