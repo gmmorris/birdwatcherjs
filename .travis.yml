@@ -1,6 +1,5 @@
 language: javascript
 
-before_script:
-  - sudo npm install -g
+sudo: false
 
 script: grunt test --verbose --force
