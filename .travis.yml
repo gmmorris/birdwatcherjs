@@ -3,6 +3,6 @@ language: javascript
 sudo: false
 
 install:
-  - npm install
-	
+ - npm install
+
 script: grunt test
