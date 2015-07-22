@@ -2,7 +2,7 @@ language: javascript
 
 sudo: false
 
-before_script:
-	npm install
+install:
+  - npm install
 	
 script: grunt test
