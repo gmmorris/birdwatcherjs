@@ -2,4 +2,7 @@ language: javascript
 
 sudo: false
 
+before_script:
+	npm install
+	
 script: grunt test --verbose --force
