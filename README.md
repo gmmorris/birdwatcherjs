@@ -1,4 +1,4 @@
-Birdwatcher JS ![alt TravisCI Build](https://travis-ci.org/gmmorris/birdwatcherjs.svg?branch=master)
+Birdwatcher JS ![alt TravisCI Build](https://travis-ci.org/gmmorris/birdwatcherjs.svg?branch=master) [![Code Climate](https://codeclimate.com/github/gmmorris/birdwatcherjs/badges/gpa.svg)](https://codeclimate.com/github/gmmorris/birdwatcherjs)
 =======
 
 A small utility for implementing the NCZ JavaScript error handling anti-pattern.
