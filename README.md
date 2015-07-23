@@ -1,4 +1,4 @@
-Birdwatcher JS
+Birdwatcher JS ![alt TravisCI Build](https://travis-ci.org/gmmorris/birdwatcherjs.svg?branch=master)
 =======
 
 A small utility for implementing the NCZ JavaScript error handling anti-pattern.
