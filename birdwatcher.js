@@ -1,16 +1,34 @@
 /**
  * @name birdwatcher.js
  * @author Gidi Meir Morris, 2014
- * @version 0.4.2
+ * @version 0.5.1
  *
  * Birdwatcher (Slang) A spy, usually used in the UK.
  *
  */
-(function(window, document, undefined) {
+ (function(root, factory) {
+
+  // Set up Backbone appropriately for the environment. Start with AMD.
+  if (typeof define === 'function' && define.amd) {
+    define([], function() {
+      // Export global even in AMD case in case this script is loaded with
+      // others that may still expect a global Backbone.
+      root.birdwatcher = factory(root, exports, _, $);
+    });
+
+  // Next for Node.js or CommonJS. jQuery may not be needed as a module.
+  } else if (typeof exports !== 'undefined') {
+    exports.birdwatcher = factory(exports);
+  // Finally, as a browser global.
+  } else {
+    root.birdwatcher = factory(root);
+  }
+
+}(this, function(root, undefined) {
   'use strict';
 
   // Save the previous value of the `birdwatcher` variable.
-  var conflictedBirdwatcher = window.birdwatcher;
+  var conflictedBirdwatcher = root.birdwatcher;
 
   /**
    * The top-level namespace
@@ -64,7 +82,7 @@
         // functions are wrapped, so we have a new funciton in memory to point to and return
         if(config.watchFunction) {
           // don't wrap a function unless watchFunction is True (which is the default)
-          returnObject = createErrorClosure(window, name, uniqueId, '', birdwatcheredObj, config, brdwtch);
+          returnObject = createErrorClosure(root, name, uniqueId, '', birdwatcheredObj, config, brdwtch);
         } else {
           // return the original function. This is useful for when we're wrapping the child properties of this function
           // but not the actual function.
@@ -104,7 +122,7 @@
   };
 
   // Current version of the utility.
-  brdwtch.VERSION = '0.5.0';
+  brdwtch.VERSION = '0.5.1';
 
   // The default configuration
   var birdwatcherConfig = {
@@ -229,7 +247,7 @@
    </pre></code>
    */
   brdwtch.noConflict = function() {
-    window.birdwatcher = conflictedBirdwatcher;
+    root.birdwatcher = conflictedBirdwatcher;
     return this;
   };
 
@@ -256,11 +274,6 @@
     }
     return false;
   };
-
-  /***
-   * Externalise
-   */
-  window.birdwatcher = brdwtch;
 
   /***
    * Internal functions
@@ -478,4 +491,6 @@
       return Array.prototype.indexOf;
     }
   })();
-})(window, document);
+
+  return brdwtch;
+}));
