@@ -1,14 +1,5 @@
-# language: node_js
-# node_js: ["0.12", "0.10"]
-#
-# env:
-#   CODECLIMATE_REPO_TOKEN: <your_token>
-#
-# before_script:
-# - npm install -g istanbul
-# - npm install -g mocha
-# - npm install -g codeclimate-test-reporter
-#
-# after_success:
-#   - istanbul cover _mocha -- -R spec ./test/*.js
-#   - codeclimate < ./coverage/lcov.info
+languages:
+  Ruby: true
+  JavaScript: true
+  PHP: true
+  Python: true
