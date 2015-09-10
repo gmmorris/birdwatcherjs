@@ -6,30 +6,11 @@ module.exports = function (grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
-		bower: {
-			install: {
-				options: {
-					targetDir: 'libraries',
-					layout: 'byComponent'
-				}
-			}
-		},
-		
-		qunit: {
-			all: {
-				options: {
-					urls: [
-						'http://localhost:9000/test/index.html'
-					]
-				}
-			}
-		},
-
 		// for changes to the front-end code
 		watch: {
 			scripts: {
-				files: ['birdwatcher.js', 'test/*.js'],
-				tasks: ['test']
+				files: ['birdwatcher.js', 'test/*.spec.js'],
+				tasks: ['jshint','mocha']
 			}
 		},
 
@@ -44,14 +25,13 @@ module.exports = function (grunt) {
 				}
 			}
 		},
-		connect: {
-			server: {
-				options: {
-					port: 9000,
-					base: '.'
-				}
-			}
+
+		mocha: {
+		  test: {
+		    src: ['test/*.spec.js'],
+		  },
 		},
+
 		uglify: {
 			release: {
 				options: {
@@ -68,7 +48,6 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.registerTask('test', ['bower:install','jshint', 'connect', 'qunit']);
 	grunt.registerTask('tdd', ['watch']);
 	grunt.registerTask('build', ['uglify:release']);
 };
