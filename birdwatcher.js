@@ -41,7 +41,7 @@
    * error thrown by them.
    * If an error is raised by the method, it is caught and can be dealt with.
    *
-   * Based on the Exception handling anti-pattern by Nicholas C. Zakas (MIT Licensed)
+   * Based on the Exception handling pattern by Nicholas C. Zakas (MIT Licensed)
    * @link http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/
    *
    * @param birdwatcheredObj (object) The object we wish to add error handling to.
