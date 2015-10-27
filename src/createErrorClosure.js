@@ -1,14 +1,6 @@
 import birdwatcherError from './error';
 
 export default function(birdwatcheredObj, name, methodName, method, configuration, birdwatcherObject) {
-  // pass args through addsOn filters
-  if (birdwatcherObject.addOns) {
-    // An addons can change the configuration before it is applied to an object
-    configuration = birdwatcherObject.addOns.each('configureClosure', configuration, name, methodName, birdwatcheredObj);
-    // An addons can wrap the method in any closure it wishes
-    method = birdwatcherObject.addOns.each('errorClosure', method, methodName, configuration);
-  }
-
   return () => {
     try {
       return method.apply(this, arguments);
@@ -30,12 +22,6 @@ export default function(birdwatcheredObj, name, methodName, method, configuratio
             message += o_O;
           }
           err = birdwatcherError(message, o_O, birdwatcheredObj, name, methodName);
-
-          // pass args through addsOn filters
-          if (birdwatcherObject.addOns) {
-            // An addons can make changes to an Error object which is created by the birdwatcher
-            err = birdwatcherObject.addOns.each('errorized', err, configuration);
-          }
         }
 
         if (typeof configuration.onError === 'function') {
