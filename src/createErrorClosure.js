@@ -1,4 +1,4 @@
-import BirdwatcherError from './error';
+import birdwatcherError from './error';
 
 export default function(birdwatcheredObj, name, methodName, method, configuration, birdwatcherObject) {
   // pass args through addsOn filters
@@ -29,7 +29,7 @@ export default function(birdwatcheredObj, name, methodName, method, configuratio
           } else if (typeof o_O === 'string') {
             message += o_O;
           }
-          err = new BirdwatcherError(message, o_O, birdwatcheredObj, name, methodName);
+          err = birdwatcherError(message, o_O, birdwatcheredObj, name, methodName);
 
           // pass args through addsOn filters
           if (birdwatcherObject.addOns) {

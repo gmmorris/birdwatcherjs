@@ -1,4 +1,4 @@
-import birdwatcher, {configure} from '../src/birdwatcher';
+import birdwatcher, {configure, isBirdwatcherError} from '../src/birdwatcher';
 import {expect} from 'chai';
 import sinon from 'sinon';
 import assert from 'simple-assert';
@@ -25,7 +25,7 @@ describe('Object specific configuration', () => {
     const failedSpy = sinon.spy();
     const mySpy = sinon.spy();
 
-    birdwatcher.configuration({
+    const myBirdwatcher = configure({
       onError: () => {
         failedSpy();
       }
@@ -37,7 +37,7 @@ describe('Object specific configuration', () => {
       }
     };
 
-    birdwatcher(oneTrickPony, {
+    myBirdwatcher(oneTrickPony, {
       onError: () => {
         mySpy();
       }
@@ -57,7 +57,7 @@ describe('Object specific configuration', () => {
     const mySpecificSpy = sinon.spy();
 
     const myBirdwatcher = configure({
-      onError: (exp, name, id, method) => {
+      onError: (exp, name, method) => {
         if (method === 'shouldCall') {
           mySpy();
         } else {
@@ -79,7 +79,7 @@ describe('Object specific configuration', () => {
     };
 
     myBirdwatcher(oneTrickPony, {
-      onError: (exp, name, id, method) => {
+      onError: (exp, name, method) => {
         if (method === 'trick') {
           mySpecificSpy();
         } else {
@@ -108,10 +108,10 @@ describe('Object specific configuration', () => {
     const onError = sinon.spy();
 
     const myBirdwatcher = configure({
-      onRethrow: (exp, name, id, method) => {
+      onRethrow: () => {
         onRethrow();
       },
-      onError: (exp, name, id, method) => {
+      onError: () => {
         onError();
       }
     });
@@ -151,11 +151,12 @@ describe('Object specific configuration', () => {
       errorize: true,
       rethrow: true,
       onRethrow: false,
-      onError: (exp, name, id, method) => {
+      onError: (exp, name, method) => {
         if (method === 'donterrorize') {
           assert(exp instanceof Error);
         } else if (method === 'errorize') {
-          assert(exp instanceof birdwatcher.Error);
+          assert(isBirdwatcherError(exp));
+          assert(exp instanceof Error);
           assert(typeof exp.error === 'object');
           assert(exp.error.isError);
         } else {
@@ -201,7 +202,7 @@ describe('Object specific configuration', () => {
       errorize: false,
       rethrow: true,
       onRethrow: false,
-      onError: (exp, name, id, method) => {
+      onError: (exp, name, method) => {
         if (method === 'originalerror') {
           assert(exp instanceof Error);
         } else if (method === 'donterrorize') {

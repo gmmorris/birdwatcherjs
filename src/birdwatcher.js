@@ -44,19 +44,26 @@ export default function birdwatcher(watchedComponent, name = '', configuration =
     configuration = name;
     name = '';
   }
-
   // merge custom configuration with default configuration
-  const config = (configuration !== defaultConfiguration ? Object.assign({}, defaultConfiguration, configuration) : configuration);
+  let config = configuration;
+  if (config && config !== defaultConfiguration) {
+    if (typeof configuration !== 'object') {
+      config = defaultConfiguration;
+    } else {
+      config = Object.assign({}, defaultConfiguration, configuration);
+    }
+  }
+
   let returnObject;
-  if (typeof birdwatcheredObj === 'object' || typeof birdwatcheredObj === 'function') {
-    if (typeof birdwatcheredObj === 'function') {
+  if (typeof watchedComponent === 'object' || typeof watchedComponent === 'function') {
+    if (typeof watchedComponent === 'function') {
       // If this is a function and not an object then the method doesn't actually have a name
       // If a name is specified as an argument then we can use that to identify the unnamed function
 
       // functions are wrapped, so we have a new funciton in memory to point to and return
       if (config.watchFunction) {
         // don't wrap a function unless watchFunction is True (which is the default)
-        returnObject = createErrorClosure(root, name, '', watchedComponent, config, this);
+        returnObject = createErrorClosure(root, name, '', watchedComponent, config, birdwatcher);
       } else {
         // return the original function. This is useful for when we're wrapping the child properties of this function
         // but not the actual function.
@@ -69,7 +76,7 @@ export default function birdwatcher(watchedComponent, name = '', configuration =
     }
 
     // watch props if config is true or is an object and not forcfully prevented by the config
-    if (config.watchProperties === true || (config.watchProperties !== false && typeof birdwatcheredObj === 'object')) {
+    if (config.watchProperties === true || (config.watchProperties !== false && typeof watchedComponent === 'object')) {
       // Cycle through the object's properties and find the methods (functions)
       const keys = (config.watchDeep ? Reflect.ownKeys(watchedComponent) : Object.keys(watchedComponent));
       for (const prop of keys) {
@@ -84,7 +91,7 @@ export default function birdwatcher(watchedComponent, name = '', configuration =
            * who goes around telling everyone who he is and what his favorite drink is.
            * Worst. Spy. Ever.)
            */
-          returnObject[prop] = createErrorClosure(watchedComponent, name, prop, method, config, this);
+          returnObject[prop] = createErrorClosure(watchedComponent, name, prop, method, config, birdwatcher);
         }
       }
     }
@@ -118,11 +125,18 @@ export default function birdwatcher(watchedComponent, name = '', configuration =
 export function configure(configurationOverride) {
   return (watchedComponent, name, configuration = configurationOverride) => {
     if (typeof name === 'object') {
-      name = '';
       configuration = name;
+      name = '';
     }
-    return birdwatcher(watchedComponent, name, (configuration !== configurationOverride ? Object.assign({}, configurationOverride, configuration) : configuration));
+    if (configuration !== configurationOverride) {
+      if (!configuration || typeof configuration !== 'object') {
+        configuration = configurationOverride;
+      } else {
+        configuration = Object.assign({}, configurationOverride, configuration);
+      }
+    }
+    return birdwatcher(watchedComponent, name, configuration);
   };
 }
 
-export { BirdwatcherError as Error } from './error';
+export { isBirdwatcherError } from './error';

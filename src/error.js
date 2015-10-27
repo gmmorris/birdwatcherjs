@@ -1,13 +1,18 @@
+export const Sentinal = Symbol('BirdwatcherError');
 
-  const BirdwatcherError = (message, originalError, srcObject, srcObjectName, method) => {
-    this.name = 'BirdwatcherError';
-    this.error = originalError;
-    this.src = {
-      src: srcObject,
-      name: srcObjectName,
-      method: method
-    };
+export const isBirdwatcherError = o_O => {
+  return (o_O && o_O[Sentinal]);
+};
+
+export default (message, originalError, srcObject, srcObjectName, method) => {
+  const err = Error(message);
+  err[Sentinal] = 1;
+  err.name = 'BirdwatcherError';
+  err.error = originalError;
+  err.name = {
+    src: srcObject,
+    name: srcObjectName,
+    method: method
   };
-  BirdwatcherError.prototype = Error.prototype;
-
-  export default BirdwatcherError;
+  return err;
+};
