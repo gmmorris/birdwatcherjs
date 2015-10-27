@@ -1,7 +1,7 @@
 {
   "name": "BirdwatcherJS",
   "description": "A covert error handling utility for Javascript. A small utility for implementing the NCZ JavaScript error handling anti-pattern",
-  "version": "0.5.1",
+  "version": "1.0.0",
   "author": "Gidi Meir Morris",
   "repository": {
     "type": "git",
@@ -14,11 +14,17 @@
     }
   ],
   "scripts": {
-    "test": "mocha test/*.spec.js"
+    "test": "mocha --compilers js:babel/register --require ./test/utils/tools.js --recursive",
+    "test:watch": "npm run test -- --watch"
   },
   "dependencies": {},
   "devDependencies": {
+    "babel": "^5.8.29",
+    "babel-eslint": "^4.1.3",
     "chai": "^3.2.0",
+    "eslint": "^1.7.3",
+    "eslint-config-airbnb": "^0.1.0",
+    "eslint-plugin-react": "^3.6.3",
     "grunt": "~0.4.1",
     "grunt-bower-task": "0.4.0",
     "grunt-contrib-jshint": "~0.7.2",

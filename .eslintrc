@@ -1,0 +1,15 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "rules": {
+    "valid-jsdoc": 2,
+
+    // Disable until Flow supports let and const
+    "no-var": 0,
+    "vars-on-top": 0,
+
+    // Disable Airbnb-specific rules
+    "comma-dangle": 0,
+    "id-length": 0
+  }
+}

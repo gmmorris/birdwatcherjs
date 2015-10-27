@@ -1,3 +1,0 @@
---require chai
---require test/utils/tools.js
---reporter nyan

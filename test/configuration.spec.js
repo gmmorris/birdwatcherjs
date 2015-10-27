@@ -1,287 +1,286 @@
+import birdwatcher, {configure} from '../src/birdwatcher';
+import {expect} from 'chai';
+import sinon from 'sinon';
 
-var birdwatcher = require('../birdwatcher.js').birdwatcher, expect = require('chai').expect, sinon = require("sinon");
+describe('Global configuration', () => {
+  it('should be able to birdwatcher object with only one function without interfering', () => {
+    const mySpy = sinon.spy();
+    const oneTrickPony = {
+      trick: () => {
+        // we can use the actual spy as the oneTrickPony's function because Birdwatcher
+        // wraps functions and hence the spys get lost in the closure hierarchy
+        mySpy();
+      }
+    };
 
-describe('Global configuration', function() {
-  beforeEach(function() {
-			// reset
-			birdwatcher.configuration({
-				rethrow: true,
-				addStackTrace: false,
-				onError: null,
-				rethrow: true,
-				onRethrow: null
-			});
-  });
+    birdwatcher(oneTrickPony);
 
-	it('should be able to birdwatcher object with only one function without interfering', function () {
-
-		var mySpy = sinon.spy();
-
-		var oneTrickPony = {
-			trick: function(){
-				// we can use the actual spy as the oneTrickPony's function because Birdwatcher
-				// wraps functions and hence the spys get lost in the closure hierarchy
-				mySpy();
-			}
-		};
-
-		birdwatcher(oneTrickPony);
-
-		oneTrickPony.trick();
+    oneTrickPony.trick();
 
     expect(mySpy.should.have.been.calledOnce);
-	});
+  });
 
-	it('should be able to birdwatcher object with multiple functions without interfering', function () {
-
-		var myTrickSpy = sinon.spy(), myTrickierSpy = sinon.spy();
-		var twoTrickPony = {
-			trick: function(){
+  it('should be able to birdwatcher object with multiple functions without interfering', () => {
+    const myTrickSpy = sinon.spy();
+    const myTrickierSpy = sinon.spy();
+    const twoTrickPony = {
+      trick: () => {
         myTrickSpy();
       },
-			trickier: function(){
+      trickier: () => {
         myTrickierSpy();
       }
-		};
-		birdwatcher(twoTrickPony);
+    };
 
-		twoTrickPony.trick();
+    birdwatcher(twoTrickPony);
+
+    twoTrickPony.trick();
     expect(myTrickSpy.should.have.been.calledOnce);
 
-		twoTrickPony.trickier();
+    twoTrickPony.trickier();
     expect(myTrickierSpy.should.have.been.calledOnce);
+  });
 
-	});
+  it('should be able to birdwatcher function which has its own function property if watchProperties is true', () => {
+    const onError = sinon.spy();
+    const myBirdwatcher = configure({
+      watchProperties: true,
+      onError: () => {
+        onError();
+      }
+    });
 
-	it('should be able to birdwatcher function which has its own function property if watchProperties is true', function () {
+    let noInitPony = () => {
+      throw new Error('No init for pony');
+    };
 
-		var onError = sinon.spy();
+    noInitPony.staticFunc = () => {
+      throw new Error('Oh my god');
+    };
 
-		birdwatcher.configuration({
-			watchProperties : true,
-			onError: function(){ onError(); }
-		});
+    noInitPony = myBirdwatcher(noInitPony);
 
-		var noInitPony = function(){
-			throw new Error("No init for pony");
-		};
+    expect(() => {
+      noInitPony.staticFunc();
+    }).to.throw(Error);
 
-		noInitPony.staticFunc = function(){
-			throw new Error("Oh my god");
-		};
-
-		noInitPony = birdwatcher(noInitPony);
-
-		expect(function () {
-			noInitPony.staticFunc();
-		}).to.throw(Error);
-
-		expect(function () {
-			var pony = new noInitPony();
-		}).to.throw(Error);
-
-		expect(onError.should.have.been.calledTwice);
-	});
-
-	it('should be able to birdwatcher function which has its own function property, with property functions when wrapping is set to false', function () {
-
-		var onError = sinon.spy();
-
-		birdwatcher.configuration({
-			watchProperties : false,
-			onError: function(){ onError(); }
-		});
-
-		var noInitPony = function(){
-			throw new Error("No init for pony");
-		};
-		noInitPony.staticFunc = function(){
-			throw new Error("Oh my god");
-		};
-
-		noInitPony = birdwatcher(noInitPony);
-
-		expect(function () {
-			noInitPony.staticFunc();
-		}).to.throw(Error);
-
-		expect(function () {
-			var pony = new noInitPony();
-		}).to.throw(Error);
-
-		expect(onError.should.have.been.calledOnce);
-	});
-
-	it('should be able to birdwatcher function which has its own function property, without wrapping property functions by default', function () {
-
-    var onError = sinon.spy();
-
-		birdwatcher.configuration({
-			watchProperties : null,
-			onError: function(){ onError(); }
-		});
-
-		var noInitPony = function(){
-			throw new Error("No init for pony");
-		};
-		noInitPony.staticFunc = function(){
-			throw new Error("Oh my god");
-		};
-
-		noInitPony = birdwatcher(noInitPony);
-
-		expect(function () {
-			noInitPony.staticFunc();
-		}).to.throw(Error);
-
-		expect(function () {
-			var pony = new noInitPony();
-		}).to.throw(Error);
-
-    expect(onError.should.have.been.calledOnce);
-
-	});
-
-	it('should call onError using global config and let error bubble up', function () {
-
-    var onError = sinon.spy();
-
-		birdwatcher.configuration({
-			onError: function(){ onError(); }
-		});
-
-		var oneTrickPony = {
-			trick: function () {
-				throw new Error("OneTrickPony failed");
-			}
-		};
-		birdwatcher(oneTrickPony);
-
-		expect(function () {
-			oneTrickPony.trick();
-		}).to.throw(Error);
-
-    expect(onError.should.have.been.calledOnce);
-	});
-
-	it('should call onError using global config for multiple methods and let error bubble up', function () {
-
-    var onError = sinon.spy(), msg = "TwoTrickPony failed ";
-
-		birdwatcher.configuration({
-			onError:onError
-		});
-
-		var twoTrickPony = {
-			trick: function () {
-				throw new Error(msg + "1");
-			},
-			trickier: function () {
-				throw new Error(msg + "2");
-			}
-		};
-		birdwatcher(twoTrickPony);
-
-		expect(function () {
-			twoTrickPony.trick();
-		}).to.throw(Error);
-
-		expect(function () {
-			twoTrickPony.trickier();
-		}).to.throw(Error);
+    expect(() => {
+      const pony = new noInitPony();
+    }).to.throw(Error);
 
     expect(onError.should.have.been.calledTwice);
-	});
+  });
 
-	it('should call onError using global config for multiple methods and prevent error from bubbling up', function () {
+  it('should be able to birdwatcher function which has its own function property, with property functions when wrapping is set to false', () => {
+    const onError = sinon.spy();
+    const myBirdwatcher = configure({
+      watchProperties: false,
+      onError: () => {
+        onError();
+      }
+    });
 
-    var onError = sinon.spy(), msg = "TwoTrickPony failed ";
+    let noInitPony = () => {
+      throw new Error('No init for pony');
+    };
+    noInitPony.staticFunc = () => {
+      throw new Error('Oh my god');
+    };
 
-		birdwatcher.configuration({
-			rethrow: false,
-			onError: function(){ onError(); }
-		});
+    noInitPony = myBirdwatcher(noInitPony);
 
-		var twoTrickPony = {
-			trick: function () {
-				throw new Error(msg + "1");
-			},
-			trickier: function () {
-				throw new Error(msg + "2");
-			}
-		};
-		birdwatcher(twoTrickPony);
+    expect(() => {
+      noInitPony.staticFunc();
+    }).to.throw(Error);
 
-		twoTrickPony.trick();
-		twoTrickPony.trickier();
+    expect(() => {
+      const pony = new noInitPony();
+    }).to.throw(Error);
+
+    expect(onError.should.have.been.calledOnce);
+  });
+
+  it('should be able to birdwatcher function which has its own function property, without wrapping property functions by default', () => {
+    const onError = sinon.spy();
+    const myBirdwatcher = configure({
+      watchProperties: null,
+      onError: () => {
+        onError();
+      }
+    });
+
+    let noInitPony = () => {
+      throw new Error('No init for pony');
+    };
+    noInitPony.staticFunc = () => {
+      throw new Error('Oh my god');
+    };
+
+    noInitPony = myBirdwatcher(noInitPony);
+
+    expect(() => {
+      noInitPony.staticFunc();
+    }).to.throw(Error);
+
+    expect(() => {
+      const pony = new noInitPony();
+    }).to.throw(Error);
+
+    expect(onError.should.have.been.calledOnce);
+  });
+
+  it('should call onError using global config and let error bubble up', () => {
+    const onError = sinon.spy();
+    const myBirdwatcher = configure({
+      onError: () => {
+        onError();
+      }
+    });
+
+    var oneTrickPony = {
+      trick: () => {
+        throw new Error('OneTrickPony failed');
+      }
+    };
+
+    myBirdwatcher(oneTrickPony);
+
+    expect(() => {
+      oneTrickPony.trick();
+    }).to.throw(Error);
+
+    expect(onError.should.have.been.calledOnce);
+  });
+
+  it('should call onError using global config for multiple methods and let error bubble up', () => {
+    const onError = sinon.spy();
+    const msg = 'TwoTrickPony failed';
+
+    const myBirdwatcher = configure({
+      onError: onError
+    });
+
+    const twoTrickPony = {
+      trick: () => {
+        throw new Error(`${msg} 1`);
+      },
+      trickier: () => {
+        throw new Error(`${msg} 2`);
+      }
+    };
+
+    myBirdwatcher(twoTrickPony);
+
+    expect(() => {
+      twoTrickPony.trick();
+    }).to.throw(Error);
+
+    expect(() => {
+      twoTrickPony.trickier();
+    }).to.throw(Error);
+
     expect(onError.should.have.been.calledTwice);
+  });
 
-	});
+  it('should call onError using global config for multiple methods and prevent error from bubbling up', () => {
+    const onError = sinon.spy();
+    const msg = 'TwoTrickPony failed';
 
-	it('should call onError using global config for multiple methods, call prerethrow callback and then let error from bubble up', function () {
+    const myBirdwatcher = configure({
+      rethrow: false,
+      onError: () => {
+        onError();
+      }
+    });
 
-		var onError = sinon.spy(), onRethrow = sinon.spy(), msg = "TwoTrickPony failed ";
+    var twoTrickPony = {
+      trick: () => {
+        throw new Error(`${msg} 1`);
+      },
+      trickier: () => {
+        throw new Error(`${msg} 2`);
+      }
+    };
+    myBirdwatcher(twoTrickPony);
 
-		birdwatcher.configuration({
-			onRethrow: function(){ onRethrow(); },
-			onError: function(){ onError(); }
-		});
+    twoTrickPony.trick();
+    twoTrickPony.trickier();
+    expect(onError.should.have.been.calledTwice);
+  });
 
-		var twoTrickPony = {
-			trick: function () {
-				throw new Error(msg + "1");
-			},
-			trickier: function () {
-				throw new Error(msg + "2");
-			}
-		};
-		birdwatcher(twoTrickPony);
+  it('should call onError using global config for multiple methods, call prerethrow callback and then let error from bubble up', () => {
+    const onError = sinon.spy();
+    const onRethrow = sinon.spy();
+    const msg = 'TwoTrickPony failed';
 
-		expect(function () {
-			twoTrickPony.trick();
-		}).to.throw(Error);
+    const myBirdwatcher = configure({
+      onRethrow: () => {
+        onRethrow();
+      },
+      onError: () => {
+        onError();
+      }
+    });
 
-		expect(function () {
-			twoTrickPony.trickier();
-		}).to.throw(Error);
+    var twoTrickPony = {
+      trick: () => {
+        throw new Error(`${msg} 1`);
+      },
+      trickier: () => {
+        throw new Error(`${msg} 2`);
+      }
+    };
+    myBirdwatcher(twoTrickPony);
+
+    expect(() => {
+      twoTrickPony.trick();
+    }).to.throw(Error);
+
+    expect(() => {
+      twoTrickPony.trickier();
+    }).to.throw(Error);
 
     expect(onError.should.have.been.calledTwice);
     expect(onRethrow.should.have.been.calledTwice);
-	});
+  });
 
-	it('should call onError using global config for multiple objects', function () {
-    var onError = sinon.spy();
-		birdwatcher.configuration({
-			onError: function(){ onError(); }
-		});
+  it('should call onError using global config for multiple objects', () => {
+    const onError = sinon.spy();
+    const myBirdwatcher = configure({
+      onError: () => {
+        onError();
+      }
+    });
 
-		var twoTrickPony = {
-			trick: function () {
-				throw new Error();
-			},
-			trickier: function () {
-				throw new Error();
-			}
-		};
-		var oneTrickPony = {
-			trick: function () {
-				throw new Error();
-			}
-		};
+    var twoTrickPony = {
+      trick: () => {
+        throw new Error();
+      },
+      trickier: () => {
+        throw new Error();
+      }
+    };
+    var oneTrickPony = {
+      trick: () => {
+        throw new Error();
+      }
+    };
 
-		birdwatcher(oneTrickPony);
-		birdwatcher(twoTrickPony);
+    myBirdwatcher(oneTrickPony);
+    myBirdwatcher(twoTrickPony);
 
-		expect(function () {
-			twoTrickPony.trick();
-		}).to.throw(Error);
-		expect(function () {
-			twoTrickPony.trickier();
-		}).to.throw(Error);
-		expect(function () {
-			oneTrickPony.trick();
-		}).to.throw(Error);
+    expect(() => {
+      twoTrickPony.trick();
+    }).to.throw(Error);
+
+    expect(() => {
+      twoTrickPony.trickier();
+    }).to.throw(Error);
+
+    expect(() => {
+      oneTrickPony.trick();
+    }).to.throw(Error);
 
     expect(onError.should.have.been.calledThrice);
-	});
+  });
 });
