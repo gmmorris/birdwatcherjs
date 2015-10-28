@@ -148,7 +148,7 @@ I've used this approach in multiple different websites and projects and have fou
   import {configure} from 'birdwatcher';
 
   export default configure({
-    onError : ufunction(){
+    onError : function(){
       ... // error tracking logic
     }
   })
@@ -161,7 +161,7 @@ If you're using ES6:
   // other component file
   import errorHandeling from 'errorHandeling';
 
-  errorHandeling(class SomeComponent {
+  const SomeComponent = errorHandeling({
     ...
   }, 'SomeComponentName');
 
