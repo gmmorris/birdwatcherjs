@@ -5,4 +5,4 @@ sudo: false
 install:
  - npm install
 
-script: grunt test
+script: npm test
