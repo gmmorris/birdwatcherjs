@@ -37,16 +37,17 @@ Assuming you bundled the Birdwatcher utility into it's own file named *birdwatch
 
     // ...
     if(runOutOfBread && runOutOfCake){
-      window.theKing.giveUpThrone();      
+      // will throw an error, which in turn will trigger the Assasin to kill the king
+      window.theKing.giveUpThrone();  
     }
 ```
 
 
 ### Advanced usage
 
-#### Specifying different callbacks for a specific object
+#### Specifying different default configurations and different configurations for a specific object
 
-By calling the birdwatcher.configuration() function youcan change the default configuration which is used globally when attaching the birdwatcher functionality to any object.
+By calling the birdwatcher.configure() function you can create a new entry point to Birdwatcher with a new custom configuration which will override the built in one.
 If you want to specify a non default configuration variable for a specific object you can override default values of the configuration specifically for the current object when calling the main birdwatcher method by using the second argument.
 
 ```js
@@ -66,22 +67,26 @@ If you want to specify a non default configuration variable for a specific objec
     };
 
     var myGlobalBirdwatcher = birdwatcher.configure({
-        onError:function(exception,name, id, method){
-            // all other error which were raised
+      // no error caught in an object watched by this custom Birdwatcher will be errorized (wraped in an Error object)
+      errorize : false,
+      // And they will all call this function to handle the onError events... unless they are overriden especially
+      onError:function(srcObject, exception,name, method){
+          // all other error which were raised
 
-            if(name == "King" && method == "giveUpThrone") {
-                //will be called when the king is challenged to give up the throne
-            }
-        }
+          if(name == "King" && method == "giveUpThrone") {
+              //will be called when the king is challenged to give up the throne
+          }
+      }
     });
 
     myGlobalBirdwatcher(window.theKing,"King");
-    myGlobalBirdwatcher(window.theAssassin,"Assasin",{
-        onError:function(exception,name, id, method){
-            // notify the rebels that the assassin has failed
-            // or rather when theAssassin.killThePrince() is called
-            // presumably that wasn't prince Joffrey, because that was no child, that was a monster!
-        }
+    myGlobalBirdwatcher(window.theAssassin,"Assassin",{
+      // override the default onError and use this one... the other default configrations will be inherited
+      onError:function(srcObject, exception,name, method){
+          // notify the rebels that the assassin has failed
+          // or rather when theAssassin.killThePrince() is called
+          // presumably that wasn't prince Joffrey, because that was no child, that was a monster!
+      }
     });
 ```
 
@@ -113,7 +118,7 @@ You cen prevent the rethrow from happening by setting the rethrow config to fals
 This can be used globally or at a single object's level.
 
 ```js
-    birdwatcher.configuration({
+    let myBirdwatcher = birdwatcher.configure({
         rethrow:false
     });
 ```
