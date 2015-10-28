@@ -3,6 +3,8 @@
   "description": "A covert error handling utility for Javascript. A small utility for implementing the NCZ JavaScript error handling pattern",
   "version": "1.0.0",
   "author": "Gidi Meir Morris",
+  "main": "lib/index.js",
+  "jsnext:main": "src/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/gmmorris/birdwatcherjs.git"
@@ -12,6 +14,8 @@
     "url": "https://github.com/gmmorris/birdwatcherjs/blob/master/LICENSE"
   }],
   "scripts": {
+    "lint": "eslint src test",
+    "build:lib": "babel src --out-dir lib",
     "test": "mocha --compilers js:babel/register --require ./test/utils/tools.js --recursive",
     "test:watch": "npm run test -- --watch"
   },

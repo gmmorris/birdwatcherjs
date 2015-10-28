@@ -1,4 +1,4 @@
-import birdwatcher, {configure} from '../src/birdwatcher';
+import {birdwatcher, configure} from '../src/index';
 import {expect} from 'chai';
 import sinon from 'sinon';
 
