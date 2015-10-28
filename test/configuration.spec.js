@@ -41,6 +41,29 @@ describe('Global configuration', () => {
     expect(myTrickierSpy.should.have.been.calledOnce);
   });
 
+  it('should be able to set a default name for components', () => {
+    const onError = sinon.spy();
+    const myBirdwatcher = configure('My.Default.Name', {
+      watchProperties: true,
+      onError: (component, name) => {
+        expect(name).to.equal('My.Default.Name');
+        onError();
+      }
+    });
+
+    let noInitPony = function() {
+      throw new Error('No init for pony');
+    };
+
+    noInitPony = myBirdwatcher(noInitPony);
+
+    expect(() => {
+      const pony = new noInitPony();
+    }).to.throw(Error);
+
+    expect(onError.should.have.been.calledOnce);
+  });
+
   it('should be able to birdwatcher function which has its own function property if watchProperties is true', () => {
     const onError = sinon.spy();
     const myBirdwatcher = configure({

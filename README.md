@@ -4,9 +4,7 @@ Birdwatcher JS ![alt TravisCI Build](https://travis-ci.org/gmmorris/birdwatcherj
 A small utility for implementing the NCZ JavaScript error handling pattern.
 To understand the anti anti-pattern pattern: http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/
 
-### Basic usage
-
-## In the Browser
+## In the Browser (as ES5)
 To use birdwatcher, all you have to do is tell birdwatcher to spy on an object and set the callback you wish to have called when an error is raised.
 
 As Birdwatcher is implemented in ES6 using the ES6 module system, you first need to build a version of the utility which can work in the browser.
@@ -19,6 +17,7 @@ Assuming you bundled the Birdwatcher utility into it's own file named *birdwatch
     <script type="text/javascript" src="birdwatcher.min.js"></script>
 ```
 
+### Basic usage
 ```js
     window.theKing = {
         giveUpThrone: function(){
@@ -117,4 +116,71 @@ This can be used globally or at a single object's level.
     birdwatcher.configuration({
         rethrow:false
     });
+```
+
+
+## In ES6 (Node.js + Babel <3 )
+If you're using ES6 you can simply import Birdwatcher and the Configure function from the module system.
+
+```
+  npm install --save-dev birdwatcher
+```
+And then where you want to use it simply:
+
+```js
+  import birdwatcher, {configure, isBirdwatcherError} from '../src/birdwatcher';
+```
+
+This will provide you with the *birdwatcher* function, which is all you really need.
+It will also provide you with the *configure* function you can use to create a new birdwatcher function with a custom configuration.
+
+For example:
+If you want a systemwide default onError handler, to send reports to your Frontend error aggregator, you can create one custom birdwatcher and use it throughout your system.
+I've used this approach in multiple different websites and projects and have foudn it a great way to seperate my error tracking from my business components.
+
+#### errorHandeling.js
+```js  
+  import {configure} from 'birdwatcher';
+
+  export default configure({
+    onError : ufunction(){
+      ... // error tracking logic
+    }
+  })
+```
+
+#### The source code of any component I wish to track
+If you're using ES6:
+```js
+
+  // other component file
+  import errorHandeling from 'errorHandeling';
+
+  errorHandeling(class SomeComponent {
+    ...
+  }, 'SomeComponentName');
+
+  // or
+
+  const myComponent = {
+    doThis : function(){},
+    doThat : function(){}
+  };
+
+  export default errorHandeling(myComponent,'myComponentName');
+```
+
+## In ES7 - coming soon (working on it right now!)
+And if you're feeling experimental with ES7 decorators, you soon will be able to do this:
+
+```js
+  // other component file
+  import errorHandeling from 'errorHandeling';
+
+  @errorHandeling('SomeComponentName')
+  class SomeComponent {
+    ...
+  }
+
+  export default SomeComponent;
 ```

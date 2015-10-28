@@ -34,9 +34,9 @@ function isWatchableProperty(property, configurable, writable) {
  *
  *   As a higher order function:
  *
- *   import connectToStores from 'Connect-to-Stores';
+ *   import birdwatch from 'birdwatcher';
  *
- *   export default birdwatch(SomeComponent, 'SomeComponent', {})
+ *   export default birdwatch(SomeComponent,'SomeComponent')
  *
  * @param  {Function} watchedComponent  The object to wrap
  * @param  {String} name  The name this object should be identified as (Should be used for all insatances of this object)
@@ -67,7 +67,7 @@ export default function birdwatcher(watchedComponent, name = '', configuration =
       // functions are wrapped, so we have a new funciton in memory to point to and return
       if (config.watchFunction) {
         // don't wrap a function unless watchFunction is True (which is the default)
-        returnObject = createErrorClosure(root, name, '', watchedComponent, config, birdwatcher);
+        returnObject = createErrorClosure(this, name, '', watchedComponent, config, birdwatcher);
       } else {
         // return the original function. This is useful for when we're wrapping the child properties of this function
         // but not the actual function.
@@ -108,7 +108,7 @@ export default function birdwatcher(watchedComponent, name = '', configuration =
 }
 
 /**
- * A higher order function that returns a configured BirdWatcher object with a predefined default configuration.
+ * A utility function that returns a BirdWatcher entry point with a predefined default configuration.
  *
  * @example:
  *  // customBirdWatcher.js
@@ -128,18 +128,27 @@ export default function birdwatcher(watchedComponent, name = '', configuration =
  * @param  {Object} configurationOverride Configuration values to override the defaults for this BirdWatcher
  * @return {Function} Birdwatcher
  */
-export function configure(configurationOverride) {
+export function configure(nameOverride, configurationOverride) {
+  if (typeof nameOverride === 'object') {
+    configurationOverride = nameOverride;
+    nameOverride = false;
+  }
   return (watchedComponent, name, configuration = configurationOverride) => {
     if (typeof name === 'object') {
       configuration = name;
-      name = '';
+      name = false;
     }
+    name = name || nameOverride;
     if (configuration !== configurationOverride) {
       if (!configuration || typeof configuration !== 'object') {
         configuration = configurationOverride;
       } else {
         configuration = Object.assign({}, configurationOverride, configuration);
       }
+    }
+
+    if (watchedComponent === null) {
+      return configure(name, configuration);
     }
     return birdwatcher(watchedComponent, name, configuration);
   };
