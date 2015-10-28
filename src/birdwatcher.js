@@ -10,9 +10,9 @@
 import defaultConfiguration from './configuration';
 import createErrorClosure from './createErrorClosure';
 
-function isWatchableProperty(property,configurable,writable) {
-	return (typeof property === 'function') && configurable && writable;
-};
+function isWatchableProperty(property, configurable, writable) {
+  return (typeof property === 'function') && configurable && writable;
+}
 
 /**
  * The Birdwatcher is a higher order function that wraps a function or an object's functions with error handling
