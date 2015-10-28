@@ -133,7 +133,7 @@ If you're using ES6 you can simply import Birdwatcher and the Configure function
 And then where you want to use it simply:
 
 ```js
-  import birdwatcher, {configure, isBirdwatcherError} from '../src/birdwatcher';
+  import birdwatcher, {configure, isBirdwatcherError} from 'birdwatcher';
 ```
 
 This will provide you with the *birdwatcher* function, which is all you really need.
