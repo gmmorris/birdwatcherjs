@@ -6,10 +6,17 @@ To understand the anti anti-pattern pattern: http://www.nczonline.net/blog/2009/
 
 ### Basic usage
 
+## In the Browser
 To use birdwatcher, all you have to do is tell birdwatcher to spy on an object and set the callback you wish to have called when an error is raised.
 
+As Birdwatcher is implemented in ES6 using the ES6 module system, you first need to build a version of the utility which can work in the browser.
+I chose not to make any assumptions as to how Birdwatcher would be integrated into a project, so instead of providing a prebuilt version for the browsers, I simply recommend you use a module bundler that supports ES6.
+Personally, I use [webpack](http://webpack.github.io/) along with [babel-loader](https://github.com/babel/babel-loader), but you can use whatever you find suitable.
+
+Assuming you bundled the Birdwatcher utility into it's own file named *birdwatcher.min.js* you may continue thusly:
+
 ```html
-    <script type="text/javascript" src="birdwatcher.js"></script>
+    <script type="text/javascript" src="birdwatcher.min.js"></script>
 ```
 
 ```js
@@ -19,8 +26,7 @@ To use birdwatcher, all you have to do is tell birdwatcher to spy on an object a
         }
     };
 
-
-    birdwatcher.configuration({
+    birdwatcher(window.theKing,{
         onError:function(exception,name, id, method){
             if(method == "giveUpThrone") {
                 assassin.killKing();
@@ -30,7 +36,10 @@ To use birdwatcher, all you have to do is tell birdwatcher to spy on an object a
         }
     });
 
-    birdwatcher(window.theKing);
+    // ...
+    if(runOutOfBread && runOutOfCake){
+      window.theKing.giveUpThrone();      
+    }
 ```
 
 
@@ -57,22 +66,22 @@ If you want to specify a non default configuration variable for a specific objec
         }
     };
 
-    birdwatcher(window.theKing,"King");
-    birdwatcher(window.theAssassin,"Assasin","BlackAdder",{
-        onError:function(exception,name, id, method){
-            // notify the rebels that the assassin has failed
-            // or rather when theAssassin.killThePrince() is called
-            // presumably that wasn't prince Joffrey, because that was no child, that was a monster!
-        }
-    });
-
-    birdwatcher.configuration({
+    var myGlobalBirdwatcher = birdwatcher.configure({
         onError:function(exception,name, id, method){
             // all other error which were raised
 
             if(name == "King" && method == "giveUpThrone") {
                 //will be called when the king is challenged to give up the throne
             }
+        }
+    });
+
+    myGlobalBirdwatcher(window.theKing,"King");
+    myGlobalBirdwatcher(window.theAssassin,"Assasin",{
+        onError:function(exception,name, id, method){
+            // notify the rebels that the assassin has failed
+            // or rather when theAssassin.killThePrince() is called
+            // presumably that wasn't prince Joffrey, because that was no child, that was a monster!
         }
     });
 ```
