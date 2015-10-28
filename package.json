@@ -1,7 +1,7 @@
 {
   "name": "birdwatcher",
   "description": "A covert error handling utility for Javascript. A small utility for implementing the NCZ JavaScript error handling pattern",
-  "version": "1.0.2",
+  "version": "1.0.21",
   "author": "Gidi Meir Morris",
   "main": "lib/index.js",
   "jsnext:main": "src/index.js",
@@ -9,16 +9,20 @@
     "type": "git",
     "url": "https://github.com/gmmorris/birdwatcherjs.git"
   },
-  "licenses": [{
-    "type": "MIT",
-    "url": "https://github.com/gmmorris/birdwatcherjs/blob/master/LICENSE"
-  }],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/gmmorris/birdwatcherjs/blob/master/LICENSE"
+    }
+  ],
   "scripts": {
     "lint": "eslint src test",
     "build": "babel src --out-dir lib",
-    "prepublish": "npm run build",
+    "prepublish": "npm run clean && npm run build",
+    "clean": "rimraf lib",
     "test": "mocha --compilers js:babel/register --require ./test/utils/tools.js --recursive",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "test:cov": "babel-node $(npm bin)/isparta cover $(npm bin)/_mocha -- --recursive"
   },
   "dependencies": {},
   "devDependencies": {
@@ -28,8 +32,10 @@
     "eslint": "^1.7.3",
     "eslint-config-airbnb": "^0.1.0",
     "eslint-plugin-react": "^3.6.3",
+    "isparta": "^3.1.0",
     "mocha": "^2.3.2",
     "mocha-lcov-reporter": "0.0.1",
+    "rimraf": "^2.4.3",
     "simple-assert": "^1.0.0",
     "sinon": "^1.16.1",
     "sinon-chai": "^2.8.0"
