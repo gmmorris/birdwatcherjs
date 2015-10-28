@@ -1,3 +1,7 @@
+require('babel/register')({
+  experimental: true
+});
+
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 
