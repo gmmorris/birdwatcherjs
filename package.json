@@ -7,12 +7,10 @@
     "type": "git",
     "url": "https://github.com/gmmorris/birdwatcherjs.git"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/gmmorris/birdwatcherjs/blob/master/LICENSE"
-    }
-  ],
+  "licenses": [{
+    "type": "MIT",
+    "url": "https://github.com/gmmorris/birdwatcherjs/blob/master/LICENSE"
+  }],
   "scripts": {
     "test": "mocha --compilers js:babel/register --require ./test/utils/tools.js --recursive",
     "test:watch": "npm run test -- --watch"
@@ -30,8 +28,6 @@
     "grunt-contrib-jshint": "~0.7.2",
     "grunt-contrib-uglify": "~0.3.0",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-mocha": "^0.4.13",
-    "grunt-mocha-test": "^0.12.7",
     "load-grunt-tasks": "~0.2.0",
     "mocha": "^2.3.2",
     "mocha-lcov-reporter": "0.0.1",

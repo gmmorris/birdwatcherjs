@@ -50,7 +50,7 @@ describe('Global configuration', () => {
       }
     });
 
-    let noInitPony = () => {
+    let noInitPony = function() {
       throw new Error('No init for pony');
     };
 

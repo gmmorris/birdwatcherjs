@@ -10,6 +10,10 @@
 import defaultConfiguration from './configuration';
 import createErrorClosure from './createErrorClosure';
 
+function isWatchableProperty(property,configurable,writable) {
+	return (typeof property === 'function') && configurable && writable;
+};
+
 /**
  * The Birdwatcher is a higher order function that wraps a function or an object's functions with error handling
  * to allow better seperation of generic error handling from the specific implementation of a component.
@@ -78,20 +82,22 @@ export default function birdwatcher(watchedComponent, name = '', configuration =
     // watch props if config is true or is an object and not forcfully prevented by the config
     if (config.watchProperties === true || (config.watchProperties !== false && typeof watchedComponent === 'object')) {
       // Cycle through the object's properties and find the methods (functions)
-      const keys = (config.watchDeep ? Reflect.ownKeys(watchedComponent) : Object.keys(watchedComponent));
-      for (const prop of keys) {
-        const method = watchedComponent[prop];
-        if (typeof method === 'function') {
-          /**
-           * Create a cloure which will be called instead of the existing method on the birdwatchered object.
-           * Usually it will simply add a call for the method and return it's value, as usual.
-           * This is a completly covert operation... the object being birdwatchered doesn't even know
-           * it has a spy on its ass.
-           * This is the Jason Bourne of functions (not to be confused with James Bond
-           * who goes around telling everyone who he is and what his favorite drink is.
-           * Worst. Spy. Ever.)
-           */
-          returnObject[prop] = createErrorClosure(watchedComponent, name, prop, method, config, birdwatcher);
+      for (const prop in watchedComponent) {
+        if (!config.watchDeep || watchedComponent.hasOwnProperty(prop)) {
+          const method = watchedComponent[prop];
+          const {configurable, writable} = Object.getOwnPropertyDescriptor(watchedComponent, prop);
+          if (isWatchableProperty(method, configurable, writable)) {
+            /**
+             * Create a cloure which will be called instead of the existing method on the birdwatchered object.
+             * Usually it will simply add a call for the method and return it's value, as usual.
+             * This is a completly covert operation... the object being birdwatchered doesn't even know
+             * it has a spy on its ass.
+             * This is the Jason Bourne of functions (not to be confused with James Bond
+             * who goes around telling everyone who he is and what his favorite drink is.
+             * Worst. Spy. Ever.)
+             */
+            returnObject[prop] = createErrorClosure(watchedComponent, name, prop, method, config, birdwatcher);
+          }
         }
       }
     }
