@@ -18,10 +18,11 @@ import birdwatcher from './birdwatcher';
  *    ...
  *  }
  *
+ * @param  {String} nameOverride A default name to give any unnamed object
  * @param  {Object} configurationOverride Configuration values to override the defaults for this BirdWatcher
  * @return {Function} Birdwatcher
  */
-export default function (nameOverride, configurationOverride) {
+export default function configure(nameOverride, configurationOverride) {
   if (typeof nameOverride === 'object') {
     configurationOverride = nameOverride;
     nameOverride = false;

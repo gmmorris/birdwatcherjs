@@ -15,7 +15,7 @@
   }],
   "scripts": {
     "lint": "eslint src test",
-    "build:lib": "babel src --out-dir lib",
+    "build": "babel src --out-dir lib",
     "test": "mocha --compilers js:babel/register --require ./test/utils/tools.js --recursive",
     "test:watch": "npm run test -- --watch"
   },

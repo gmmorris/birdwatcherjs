@@ -51,14 +51,14 @@ describe('Global configuration', () => {
       }
     });
 
-    let noInitPony = function() {
+    let NoInitPony = () => {
       throw new Error('No init for pony');
     };
 
-    noInitPony = myBirdwatcher(noInitPony);
+    NoInitPony = myBirdwatcher(NoInitPony);
 
     expect(() => {
-      const pony = new noInitPony();
+      return new NoInitPony();
     }).to.throw(Error);
 
     expect(onError.should.have.been.calledOnce);
@@ -73,22 +73,22 @@ describe('Global configuration', () => {
       }
     });
 
-    let noInitPony = function() {
+    let NoInitPony = () => {
       throw new Error('No init for pony');
     };
 
-    noInitPony.staticFunc = () => {
+    NoInitPony.staticFunc = () => {
       throw new Error('Oh my god');
     };
 
-    noInitPony = myBirdwatcher(noInitPony);
+    NoInitPony = myBirdwatcher(NoInitPony);
 
     expect(() => {
-      noInitPony.staticFunc();
+      NoInitPony.staticFunc();
     }).to.throw(Error);
 
     expect(() => {
-      const pony = new noInitPony();
+      return new NoInitPony();
     }).to.throw(Error);
 
     expect(onError.should.have.been.calledTwice);
@@ -103,21 +103,21 @@ describe('Global configuration', () => {
       }
     });
 
-    let noInitPony = () => {
+    let NoInitPony = () => {
       throw new Error('No init for pony');
     };
-    noInitPony.staticFunc = () => {
+    NoInitPony.staticFunc = () => {
       throw new Error('Oh my god');
     };
 
-    noInitPony = myBirdwatcher(noInitPony);
+    NoInitPony = myBirdwatcher(NoInitPony);
 
     expect(() => {
-      noInitPony.staticFunc();
+      NoInitPony.staticFunc();
     }).to.throw(Error);
 
     expect(() => {
-      const pony = new noInitPony();
+      return new NoInitPony();
     }).to.throw(Error);
 
     expect(onError.should.have.been.calledOnce);
@@ -132,21 +132,21 @@ describe('Global configuration', () => {
       }
     });
 
-    let noInitPony = () => {
+    let NoInitPony = () => {
       throw new Error('No init for pony');
     };
-    noInitPony.staticFunc = () => {
+    NoInitPony.staticFunc = () => {
       throw new Error('Oh my god');
     };
 
-    noInitPony = myBirdwatcher(noInitPony);
+    NoInitPony = myBirdwatcher(NoInitPony);
 
     expect(() => {
-      noInitPony.staticFunc();
+      NoInitPony.staticFunc();
     }).to.throw(Error);
 
     expect(() => {
-      const pony = new noInitPony();
+      return new NoInitPony();
     }).to.throw(Error);
 
     expect(onError.should.have.been.calledOnce);
