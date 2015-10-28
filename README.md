@@ -2,7 +2,7 @@ Birdwatcher JS ![alt TravisCI Build](https://travis-ci.org/gmmorris/birdwatcherj
 =======
 
 A small utility for implementing the NCZ JavaScript error handling pattern.
-To understand the anti-pattern: http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/
+To understand the anti anti-pattern pattern: http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/
 
 ### Basic usage
 
@@ -86,7 +86,7 @@ Note though, that in order to call the function variable you will have to replac
     var myErrorHandledFunction = function(){
 		// ...
 	};
-	
+
     var myObject = {
 		myErrorHandledMethod : function(){
 			// ...
@@ -109,4 +109,3 @@ This can be used globally or at a single object's level.
         rethrow:false
     });
 ```
-
