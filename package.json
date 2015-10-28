@@ -1,5 +1,5 @@
 {
-  "name": "BirdwatcherJS",
+  "name": "birdwatcher",
   "description": "A covert error handling utility for Javascript. A small utility for implementing the NCZ JavaScript error handling pattern",
   "version": "1.0.1",
   "author": "Gidi Meir Morris",
