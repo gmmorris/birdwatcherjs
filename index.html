@@ -1,157 +1,234 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Birdwatcherjs by gmmorris</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
     <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
+    <title>Birdwatcherjs by gmmorris</title>
   </head>
+
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/gmmorris/birdwatcherjs">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/gmmorris/birdwatcherjs/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/gmmorris/birdwatcherjs/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
-  <a href="https://github.com/gmmorris/birdwatcherjs"><img style="position: absolute; z-index: 1000;top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
-    <div class="wrapper">
+    <div id="container">
+      <div class="inner">
 
-      <section>
-        <div id="title">
+        <header>
           <h1>Birdwatcherjs</h1>
-          <p>A covert error handling utility for Javascript. A small utility for implementing the NCZ Javascript error handling anti-pattern.</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/gmmorris">gmmorris</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
-        </div>
+          <h2>A covert error handling utility for Javascript. A small utility for implementing the NCZ Javascript error handling anti-pattern.</h2>
+        </header>
 
-        <h1>
-<a name="birdwatcher-js" class="anchor" href="#birdwatcher-js"><span class="octicon octicon-link"></span></a>Birdwatcher JS</h1>
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/gmmorris/birdwatcherjs/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/gmmorris/birdwatcherjs/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/gmmorris/birdwatcherjs" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-<p>A small utility for implementing the NCZ JavaScript error handling anti-pattern.<br/>
-To understand the anti-pattern: <a href="http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/">http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/</a></p>
+        <hr>
 
-<h3>
-<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h3>
+        <section id="main_content">
+          <h1>
+<a id="birdwatcher-js--" class="anchor" href="#birdwatcher-js--" aria-hidden="true"><span class="octicon octicon-link"></span></a>Birdwatcher JS <img src="https://travis-ci.org/gmmorris/birdwatcherjs.svg?branch=master" alt="alt TravisCI Build"> <a href="https://codeclimate.com/github/gmmorris/birdwatcherjs"><img src="https://codeclimate.com/github/gmmorris/birdwatcherjs/badges/gpa.svg" alt="Code Climate"></a>
+</h1>
+
+<p>A small utility for implementing the NCZ JavaScript error handling pattern.
+To understand the anti anti-pattern pattern: <a href="http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/">http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/</a></p>
+
+<h2>
+<a id="in-the-browser-as-es5" class="anchor" href="#in-the-browser-as-es5" aria-hidden="true"><span class="octicon octicon-link"></span></a>In the Browser (as ES5)</h2>
 
 <p>To use birdwatcher, all you have to do is tell birdwatcher to spy on an object and set the callback you wish to have called when an error is raised.</p>
 
-<div class="highlight highlight-html"><pre>    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"birdwatcher.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-</pre></div>
+<p>As Birdwatcher is implemented in ES6 using the ES6 module system, you first need to build a version of the utility which can work in the browser.
+I chose not to make any assumptions as to how Birdwatcher would be integrated into a project, so instead of providing a prebuilt version for the browsers, I simply recommend you use a module bundler that supports ES6.
+Personally, I use <a href="http://webpack.github.io/">webpack</a> along with <a href="https://github.com/babel/babel-loader">babel-loader</a>, but you can use whatever you find suitable.</p>
 
-<div class="highlight highlight-js"><pre>    <span class="nb">window</span><span class="p">.</span><span class="nx">theKing</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="nx">giveUpThrone</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">"The king will never be over thrown!"</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">};</span>
+<p>Assuming you bundled the Birdwatcher utility into it's own file named <em>birdwatcher.min.js</em> you may continue thusly:</p>
 
-
-    <span class="nx">birdwatcher</span><span class="p">.</span><span class="nx">configuration</span><span class="p">({</span>
-        <span class="nx">onError</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">exception</span><span class="p">,</span><span class="nx">method</span><span class="p">){</span>
-            <span class="k">if</span><span class="p">(</span><span class="nx">method</span> <span class="o">==</span> <span class="s2">"giveUpThrone"</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nx">assassin</span><span class="p">.</span><span class="nx">killKing</span><span class="p">();</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="c1">// some other error took place</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="nx">birdwatcher</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">theKing</span><span class="p">);</span>
-</pre></div>
+<div class="highlight highlight-text-html-basic"><pre><span class="pl-s1">    &lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>birdwatcher.min.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</span></pre></div>
 
 <h3>
-<a name="advanced-usage" class="anchor" href="#advanced-usage"><span class="octicon octicon-link"></span></a>Advanced usage</h3>
+<a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic usage</h3>
+
+<div class="highlight highlight-source-js"><pre>    <span class="pl-c1">window</span>.theKing <span class="pl-k">=</span> {
+        <span class="pl-en">giveUpThrone</span><span class="pl-k">:</span> <span class="pl-k">function</span>(){
+            <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-en">Error</span>(<span class="pl-s"><span class="pl-pds">"</span>The king will never be over thrown!<span class="pl-pds">"</span></span>);
+        }
+    };
+
+    birdwatcher(<span class="pl-c1">window</span>.theKing,{
+        <span class="pl-en">onError</span><span class="pl-k">:</span><span class="pl-k">function</span>(<span class="pl-smi">exception</span>,<span class="pl-smi">name</span>, <span class="pl-smi">id</span>, <span class="pl-smi">method</span>){
+            <span class="pl-k">if</span>(method <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">"</span>giveUpThrone<span class="pl-pds">"</span></span>) {
+                assassin.killKing();
+            } <span class="pl-k">else</span> {
+                <span class="pl-c">// some other error took place</span>
+            }
+        }
+    });
+
+    <span class="pl-c">// ...</span>
+    <span class="pl-k">if</span>(runOutOfBread <span class="pl-k">&amp;&amp;</span> runOutOfCake){
+      <span class="pl-c">// will throw an error, which in turn will trigger the Assasin to kill the king</span>
+      <span class="pl-c1">window</span>.theKing.giveUpThrone();  
+    }</pre></div>
+
+<h3>
+<a id="advanced-usage" class="anchor" href="#advanced-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced usage</h3>
 
 <h4>
-<a name="specifying-different-callbacks-for-a-specific-object" class="anchor" href="#specifying-different-callbacks-for-a-specific-object"><span class="octicon octicon-link"></span></a>Specifying different callbacks for a specific object</h4>
+<a id="specifying-different-default-configurations-and-different-configurations-for-a-specific-object" class="anchor" href="#specifying-different-default-configurations-and-different-configurations-for-a-specific-object" aria-hidden="true"><span class="octicon octicon-link"></span></a>Specifying different default configurations and different configurations for a specific object</h4>
 
-<p>By calling the birdwatcher.configuration() function youcan change the default configuration which is used globally when attaching the birdwatcher functionality to any object.
+<p>By calling the birdwatcher.configure() function you can create a new entry point to Birdwatcher with a new custom configuration which will override the built in one.
 If you want to specify a non default configuration variable for a specific object you can override default values of the configuration specifically for the current object when calling the main birdwatcher method by using the second argument.</p>
 
-<div class="highlight highlight-js"><pre>    <span class="nb">window</span><span class="p">.</span><span class="nx">theKing</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="nx">giveUpThrone</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">"The king will never be over thrown!"</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">};</span>
+<div class="highlight highlight-source-js"><pre>    <span class="pl-c1">window</span>.theKing <span class="pl-k">=</span> {
+        <span class="pl-en">giveUpThrone</span><span class="pl-k">:</span> <span class="pl-k">function</span>(){
+            <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-en">Error</span>(<span class="pl-s"><span class="pl-pds">"</span>The king will never be over thrown!<span class="pl-pds">"</span></span>);
+        }
+    };
 
-    <span class="nb">window</span><span class="p">.</span><span class="nx">theAssassin</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="nx">killTheKing</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">injectPoison</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">theKing</span><span class="p">);</span>
-        <span class="p">},</span>
-        <span class="nx">killThePrince</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">"No women and children!"</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">};</span>
+    <span class="pl-c1">window</span>.theAssassin <span class="pl-k">=</span> {
+        <span class="pl-en">killTheKing</span><span class="pl-k">:</span> <span class="pl-k">function</span>(){
+            <span class="pl-v">this</span>.injectPoison(<span class="pl-c1">window</span>.theKing);
+        },
+        <span class="pl-en">killThePrince</span><span class="pl-k">:</span> <span class="pl-k">function</span>(){
+            <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-en">Error</span>(<span class="pl-s"><span class="pl-pds">"</span>No women and children!<span class="pl-pds">"</span></span>);
+        }
+    };
 
-    <span class="nx">birdwatcher</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">theKing</span><span class="p">);</span>
-    <span class="nx">birdwatcher</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">theAssassin</span><span class="p">,{</span>
-        <span class="nx">onError</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">exception</span><span class="p">,</span><span class="nx">method</span><span class="p">){</span>
-            <span class="c1">// notify the rebels that the assassin has failed</span>
-            <span class="c1">// or rather when theAssassin.killThePrince() is called</span>
-            <span class="c1">// presumably that wasn't prince Joffrey, because that was no child, that was a monster!</span>
-        <span class="p">}</span>
-    <span class="p">});</span>
+    <span class="pl-k">var</span> myGlobalBirdwatcher <span class="pl-k">=</span> birdwatcher.configure({
+      <span class="pl-c">// no error caught in an object watched by this custom Birdwatcher will be errorized (wraped in an Error object)</span>
+      errorize <span class="pl-k">:</span> <span class="pl-c1">false</span>,
+      <span class="pl-c">// And they will all call this function to handle the onError events... unless they are overriden especially</span>
+      <span class="pl-en">onError</span><span class="pl-k">:</span><span class="pl-k">function</span>(<span class="pl-smi">srcObject</span>, <span class="pl-smi">exception</span>,<span class="pl-smi">name</span>, <span class="pl-smi">method</span>){
+          <span class="pl-c">// all other error which were raised</span>
 
-    <span class="nx">birdwatcher</span><span class="p">.</span><span class="nx">configuration</span><span class="p">({</span>
-        <span class="nx">onError</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">exception</span><span class="p">,</span><span class="nx">method</span><span class="p">){</span>
-            <span class="c1">// all other error which were raised</span>
+          <span class="pl-k">if</span>(name <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">"</span>King<span class="pl-pds">"</span></span> <span class="pl-k">&amp;&amp;</span> method <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">"</span>giveUpThrone<span class="pl-pds">"</span></span>) {
+              <span class="pl-c">//will be called when the king is challenged to give up the throne</span>
+          }
+      }
+    });
 
-            <span class="k">if</span><span class="p">(</span><span class="nx">method</span> <span class="o">==</span> <span class="s2">"giveUpThrone"</span><span class="p">)</span> <span class="p">{</span>
-                <span class="c1">//will be called when the king is challenged to give up the throne</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">});</span>
-</pre></div>
+    myGlobalBirdwatcher(<span class="pl-c1">window</span>.theKing,<span class="pl-s"><span class="pl-pds">"</span>King<span class="pl-pds">"</span></span>);
+    myGlobalBirdwatcher(<span class="pl-c1">window</span>.theAssassin,<span class="pl-s"><span class="pl-pds">"</span>Assassin<span class="pl-pds">"</span></span>,{
+      <span class="pl-c">// override the default onError and use this one... the other default configrations will be inherited</span>
+      <span class="pl-en">onError</span><span class="pl-k">:</span><span class="pl-k">function</span>(<span class="pl-smi">srcObject</span>, <span class="pl-smi">exception</span>,<span class="pl-smi">name</span>, <span class="pl-smi">method</span>){
+          <span class="pl-c">// notify the rebels that the assassin has failed</span>
+          <span class="pl-c">// or rather when theAssassin.killThePrince() is called</span>
+          <span class="pl-c">// presumably that wasn't prince Joffrey, because that was no child, that was a monster!</span>
+      }
+    });</pre></div>
 
 <h4>
-<a name="watching-a-single-function" class="anchor" href="#watching-a-single-function"><span class="octicon octicon-link"></span></a>Watching a single function</h4>
+<a id="watching-a-single-function" class="anchor" href="#watching-a-single-function" aria-hidden="true"><span class="octicon octicon-link"></span></a>Watching a single function</h4>
 
 <p>If you wish to plug a specific method of an object or a function variable into the birdwatcher mechanism you can call the main birdwatcher function and pass the specific method/variable as the first argument, same as with an object.
 Note though, that in order to call the function variable you will have to replace the reference you have to it manually.</p>
 
-<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">myErrorHandledFunction</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
-        <span class="c1">// ...</span>
-    <span class="p">};</span>
+<div class="highlight highlight-source-js"><pre>    <span class="pl-k">var</span> <span class="pl-en">myErrorHandledFunction</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(){
+        <span class="pl-c">// ...</span>
+    };
 
-    <span class="kd">var</span> <span class="nx">myObject</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="nx">myErrorHandledMethod</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
-            <span class="c1">// ...</span>
-        <span class="p">}</span>
-    <span class="p">};</span>
+    <span class="pl-k">var</span> myObject <span class="pl-k">=</span> {
+        <span class="pl-en">myErrorHandledMethod</span> <span class="pl-k">:</span> <span class="pl-k">function</span>(){
+            <span class="pl-c">// ...</span>
+        }
+    };
 
-    <span class="nx">myErrorHandledFunction</span> <span class="o">=</span> <span class="nx">birdwatcher</span><span class="p">(</span><span class="nx">myErrorHandledFunction</span><span class="p">);</span>
-    <span class="nx">myObject</span><span class="p">.</span><span class="nx">myErrorHandledMethod</span> <span class="o">=</span> <span class="nx">birdwatcher</span><span class="p">(</span><span class="nx">myObject</span><span class="p">.</span><span class="nx">myErrorHandledMethod</span><span class="p">);</span>
-</pre></div>
+    myErrorHandledFunction <span class="pl-k">=</span> birdwatcher(myErrorHandledFunction);
+    myObject.myErrorHandledMethod <span class="pl-k">=</span> birdwatcher(myObject.myErrorHandledMethod);</pre></div>
 
 <h4>
-<a name="preventing-a-rethrow" class="anchor" href="#preventing-a-rethrow"><span class="octicon octicon-link"></span></a>Preventing a rethrow</h4>
+<a id="preventing-a-rethrow" class="anchor" href="#preventing-a-rethrow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preventing a rethrow</h4>
 
 <p>The default is to rethrow an error once it is caught, so that the normal error flow can be maintained even when an error
 is caught for special usages (such as logging).
 You cen prevent the rethrow from happening by setting the rethrow config to false.
 This can be used globally or at a single object's level.</p>
 
-<div class="highlight highlight-js"><pre>    <span class="nx">birdwatcher</span><span class="p">.</span><span class="nx">configuration</span><span class="p">({</span>
-        <span class="nx">rethrow</span><span class="o">:</span><span class="kc">false</span>
-    <span class="p">});</span>
-</pre></div>
-      </section>
+<div class="highlight highlight-source-js"><pre>    <span class="pl-k">let</span> myBirdwatcher <span class="pl-k">=</span> birdwatcher.configure({
+        rethrow<span class="pl-k">:</span><span class="pl-c1">false</span>
+    });</pre></div>
 
+<h2>
+<a id="in-es6-nodejs--babel-3-" class="anchor" href="#in-es6-nodejs--babel-3-" aria-hidden="true"><span class="octicon octicon-link"></span></a>In ES6 (Node.js + Babel &lt;3 )</h2>
+
+<p>If you're using ES6 you can simply import Birdwatcher and the Configure function from the module system.</p>
+
+<pre><code>  npm install --save-dev birdwatcher
+</code></pre>
+
+<p>And then where you want to use it simply:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> <span class="pl-smi">birdwatcher</span>, {<span class="pl-smi">configure</span>, <span class="pl-smi">isBirdwatcherError</span>} <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>birdwatcher<span class="pl-pds">'</span></span>;</pre></div>
+
+<p>This will provide you with the <em>birdwatcher</em> function, which is all you really need.
+It will also provide you with the <em>configure</em> function you can use to create a new birdwatcher function with a custom configuration.</p>
+
+<p>For example:
+If you want a systemwide default onError handler, to send reports to your Frontend error aggregator, you can create one custom birdwatcher and use it throughout your system.
+I've used this approach in multiple different websites and projects and have foudn it a great way to seperate my error tracking from my business components.</p>
+
+<h4>
+<a id="errorhandelingjs" class="anchor" href="#errorhandelingjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>errorHandeling.js</h4>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> {<span class="pl-smi">configure</span>} <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>birdwatcher<span class="pl-pds">'</span></span>;
+
+  <span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">configure</span>({
+    <span class="pl-smi">onError</span> : <span class="pl-smi">ufunction</span>(){
+      ... // <span class="pl-smi">error</span> <span class="pl-smi">tracking</span> <span class="pl-smi">logic</span>
+    }
+  })</pre></div>
+
+<h4>
+<a id="the-source-code-of-any-component-i-wish-to-track" class="anchor" href="#the-source-code-of-any-component-i-wish-to-track" aria-hidden="true"><span class="octicon octicon-link"></span></a>The source code of any component I wish to track</h4>
+
+<p>If you're using ES6:</p>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-c">// other component file</span>
+  <span class="pl-k">import</span> <span class="pl-smi">errorHandeling</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>errorHandeling<span class="pl-pds">'</span></span>;
+
+  errorHandeling(<span class="pl-k">class</span> <span class="pl-en">SomeComponent</span> {
+    ...
+  }, <span class="pl-s"><span class="pl-pds">'</span>SomeComponentName<span class="pl-pds">'</span></span>);
+
+  <span class="pl-c">// or</span>
+
+  <span class="pl-k">const</span> <span class="pl-c1">myComponent</span> <span class="pl-k">=</span> {
+    <span class="pl-en">doThis</span> <span class="pl-k">:</span> <span class="pl-k">function</span>(){},
+    <span class="pl-en">doThat</span> <span class="pl-k">:</span> <span class="pl-k">function</span>(){}
+  };
+
+  <span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">errorHandeling</span>(<span class="pl-smi">myComponent</span>,<span class="pl-s"><span class="pl-pds">'</span>myComponentName<span class="pl-pds">'</span></span>);</pre></div>
+
+<h2>
+<a id="in-es7---coming-soon-working-on-it-right-now" class="anchor" href="#in-es7---coming-soon-working-on-it-right-now" aria-hidden="true"><span class="octicon octicon-link"></span></a>In ES7 - coming soon (working on it right now!)</h2>
+
+<p>And if you're feeling experimental with ES7 decorators, you soon will be able to do this:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-c">// other component file</span>
+  <span class="pl-k">import</span> <span class="pl-smi">errorHandeling</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>errorHandeling<span class="pl-pds">'</span></span>;
+
+  @errorHandeling(<span class="pl-s"><span class="pl-pds">'</span>SomeComponentName<span class="pl-pds">'</span></span>)
+  <span class="pl-k">class</span> <span class="pl-en">SomeComponent</span> {
+    ...
+  }
+
+  <span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">SomeComponent</span>;</pre></div>
+        </section>
+
+        <footer>
+          Birdwatcherjs is maintained by <a href="https://github.com/gmmorris">gmmorris</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
   </body>
 </html>
