@@ -22,7 +22,7 @@
     "version": "npm run build",
     "postversion": "git push && git push --tags && npm run clean",
     "prepublish": "npm run clean && npm run build",
-    "postinstall": "npm run clean && npm run build",
+    "postinstall": "npm run build",
     "clean": "rimraf lib",
     "test": "mocha --compilers js:babel/register --require ./test/utils/tools.js --recursive",
     "test:watch": "npm run test -- --watch",
