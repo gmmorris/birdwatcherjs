@@ -17,7 +17,10 @@
   ],
   "scripts": {
     "lint": "eslint src test",
-    "build": "babel src --out-dir lib",
+    "build": "babel src --out-dir lib",,
+    "preversion": "npm run clean && npm test",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags && npm run clean",
     "prepublish": "npm run clean && npm run build",
     "clean": "rimraf lib",
     "test": "mocha --compilers js:babel/register --require ./test/utils/tools.js --recursive",
