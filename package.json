@@ -1,7 +1,7 @@
 {
   "name": "birdwatcher",
   "description": "A covert error handling utility for Javascript. A small utility for implementing the NCZ JavaScript error handling pattern",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Gidi Meir Morris",
   "main": "lib/index.js",
   "jsnext:main": "src/index.js",
