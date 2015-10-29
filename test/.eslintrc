@@ -1,6 +1,9 @@
 {
   "parser": "babel-eslint",
   "extends": "airbnb",
+  "env" : {
+    "mocha" : true
+  },
   "rules": {
     "valid-jsdoc": 2,
 

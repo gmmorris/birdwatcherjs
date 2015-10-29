@@ -1,12 +1,10 @@
 /**
  * @name birdwatcher.js
  * @author Gidi Meir Morris, 2014
- * @version 0.5.1
  *
  * Birdwatcher (Slang) A spy, usually used in the UK.
  *
  */
-
 import defaultConfiguration from './configuration';
 import createErrorClosure from './createErrorClosure';
 
@@ -106,52 +104,3 @@ export default function birdwatcher(watchedComponent, name = '', configuration =
   }
   return false;
 }
-
-/**
- * A utility function that returns a BirdWatcher entry point with a predefined default configuration.
- *
- * @example:
- *  // customBirdWatcher.js
- *  import {configure} from 'birdwatcher';
- *
- *  export default configure({
- *    ...
- *  })
- *
- *  // other component file
- *  import {birdwatch} from 'customBirdWatcher';
- *  @birdwatch('SomeComponent')
- *  class SomeComponent {
- *    ...
- *  }
- *
- * @param  {Object} configurationOverride Configuration values to override the defaults for this BirdWatcher
- * @return {Function} Birdwatcher
- */
-export function configure(nameOverride, configurationOverride) {
-  if (typeof nameOverride === 'object') {
-    configurationOverride = nameOverride;
-    nameOverride = false;
-  }
-  return (watchedComponent, name, configuration = configurationOverride) => {
-    if (typeof name === 'object') {
-      configuration = name;
-      name = false;
-    }
-    name = name || nameOverride;
-    if (configuration !== configurationOverride) {
-      if (!configuration || typeof configuration !== 'object') {
-        configuration = configurationOverride;
-      } else {
-        configuration = Object.assign({}, configurationOverride, configuration);
-      }
-    }
-
-    if (watchedComponent === null) {
-      return configure(name, configuration);
-    }
-    return birdwatcher(watchedComponent, name, configuration);
-  };
-}
-
-export { isBirdwatcherError } from './error';

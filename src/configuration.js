@@ -78,4 +78,4 @@ export default {
    * place, but that isn't always an option.
    */
   watchFunction: true
-}
+};
