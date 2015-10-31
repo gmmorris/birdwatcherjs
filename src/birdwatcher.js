@@ -7,9 +7,18 @@
  */
 import defaultConfiguration from './configuration';
 import createErrorClosure from './createErrorClosure';
+import {isWatchablePropertyOfComponent} from './tools/isWatchableProperty';
 
-function isWatchableProperty(property, configurable, writable) {
-  return (typeof property === 'function') && configurable && writable;
+const BirdwatcherSentinal = Symbol('birdwatcher');
+export function isBirdwatcher(object) {
+  return (object && (typeof object === 'function') && object[BirdwatcherSentinal] === 1);
+}
+export function paintBirdwatcher(object) {
+  if (typeof object !== 'function') {
+    throw new Error('Birdwatcher(paintBirdwatcher): Only a function can be a birdwatcher');
+  }
+  object[BirdwatcherSentinal] = 1;
+  return object;
 }
 
 /**
@@ -65,7 +74,7 @@ export default function birdwatcher(watchedComponent, name = '', configuration =
       // functions are wrapped, so we have a new funciton in memory to point to and return
       if (config.watchFunction) {
         // don't wrap a function unless watchFunction is True (which is the default)
-        returnObject = createErrorClosure(this, name, '', watchedComponent, config, birdwatcher);
+        returnObject = createErrorClosure(null, name, '', watchedComponent, config, birdwatcher);
       } else {
         // return the original function. This is useful for when we're wrapping the child properties of this function
         // but not the actual function.
@@ -82,9 +91,7 @@ export default function birdwatcher(watchedComponent, name = '', configuration =
       // Cycle through the object's properties and find the methods (functions)
       for (const prop in watchedComponent) {
         if (!config.watchDeep || watchedComponent.hasOwnProperty(prop)) {
-          const method = watchedComponent[prop];
-          const {configurable, writable} = Object.getOwnPropertyDescriptor(watchedComponent, prop);
-          if (isWatchableProperty(method, configurable, writable)) {
+          if (isWatchablePropertyOfComponent(watchedComponent, prop)) {
             /**
              * Create a cloure which will be called instead of the existing method on the birdwatchered object.
              * Usually it will simply add a call for the method and return it's value, as usual.
@@ -94,7 +101,7 @@ export default function birdwatcher(watchedComponent, name = '', configuration =
              * who goes around telling everyone who he is and what his favorite drink is.
              * Worst. Spy. Ever.)
              */
-            returnObject[prop] = createErrorClosure(watchedComponent, name, prop, method, config, birdwatcher);
+            returnObject[prop] = createErrorClosure(watchedComponent, name, prop, watchedComponent[prop], config, birdwatcher);
           }
         }
       }

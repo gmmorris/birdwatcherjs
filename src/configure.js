@@ -1,4 +1,4 @@
-import birdwatcher from './birdwatcher';
+import birdwatcher, {isBirdwatcher, paintBirdwatcher} from './birdwatcher';
 
 /**
  * A utility function that returns a BirdWatcher entry point with a predefined default configuration.
@@ -18,16 +18,25 @@ import birdwatcher from './birdwatcher';
  *    ...
  *  }
  *
+ * @param  {Object} birdwatcherOverride Birdwatcher function to use in place of default birdwatcher
  * @param  {String} nameOverride A default name to give any unnamed object
  * @param  {Object} configurationOverride Configuration values to override the defaults for this BirdWatcher
  * @return {Function} Birdwatcher
  */
-export default function configure(nameOverride, configurationOverride) {
-  if (typeof nameOverride === 'object') {
+export default function configure(birdwatcherOverride, nameOverride, configurationOverride) {
+  if (!isBirdwatcher(birdwatcherOverride)) {
+    configurationOverride = nameOverride;
+    nameOverride = birdwatcherOverride;
+    birdwatcherOverride = false;
+  }
+  if (typeof nameOverride !== 'string') {
     configurationOverride = nameOverride;
     nameOverride = false;
   }
-  return (watchedComponent, name, configuration = configurationOverride) => {
+  if (typeof configurationOverride !== 'object') {
+    configurationOverride = false;
+  }
+  return paintBirdwatcher((watchedComponent, name, configuration = configurationOverride) => {
     if (typeof name === 'object') {
       configuration = name;
       name = false;
@@ -42,8 +51,9 @@ export default function configure(nameOverride, configurationOverride) {
     }
 
     if (watchedComponent === null) {
-      return configure(name, configuration);
+      return configure(birdwatcherOverride, name, configuration);
     }
-    return birdwatcher(watchedComponent, name, configuration);
-  };
+    // pass the component, name and config to either the birdwatcherOverride or, if there is none, birdwatcher
+    return (birdwatcherOverride || birdwatcher)(watchedComponent, name, configuration);
+  });
 }
