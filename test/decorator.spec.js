@@ -3,6 +3,36 @@ import {expect} from 'chai';
 import sinon from 'sinon';
 
 describe('Birdwatcher decorator', () => {
+  it('should be usable without a decorator syntax for ES6 support', () => {
+    const onError = sinon.spy();
+    const msg = 'TwoTrickPony failed';
+
+    class TwoTrickPony {
+      trick() {
+        throw new Error(`${msg} 1`);
+      }
+      trickier() {
+        throw new Error(`${msg} 2`);
+      }
+    }
+
+    TwoTrickPony = birdwatch({
+      onError: onError
+    })(TwoTrickPony);
+
+    const myTwoTrickPony = new TwoTrickPony();
+
+    expect(() => {
+      myTwoTrickPony.trick();
+    }).to.throw(Error);
+
+    expect(() => {
+      myTwoTrickPony.trickier();
+    }).to.throw(Error);
+
+    expect(onError.should.have.been.calledTwice);
+  });
+
   it('allows birdwatchign to be attached to all class methods using a decorator', () => {
     const onError = sinon.spy();
     const msg = 'TwoTrickPony failed';

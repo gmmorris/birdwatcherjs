@@ -143,7 +143,7 @@ For example:
 If you want a systemwide default onError handler, to send reports to your Frontend error aggregator, you can create one custom birdwatcher and use it throughout your system.
 I've used this approach in multiple different websites and projects and have foudn it a great way to seperate my error tracking from my business components.
 
-#### errorHandeling.js
+#### errorhandling.js
 ```js  
   import {configure} from 'birdwatcher';
 
@@ -159,9 +159,9 @@ If you're using ES6:
 ```js
 
   // other component file
-  import errorHandeling from 'errorHandeling';
+  import errorhandling from 'errorhandling';
 
-  const SomeComponent = errorHandeling({
+  const SomeComponent = errorhandling({
     ...
   }, 'SomeComponentName');
 
@@ -172,17 +172,57 @@ If you're using ES6:
     doThat : function(){}
   };
 
-  export default errorHandeling(myComponent,'myComponentName');
+  export default errorhandling(myComponent,'myComponentName');
 ```
 
-## In ES7 - coming soon (working on it right now!)
-And if you're feeling experimental with ES7 decorators, you soon will be able to do this:
+You can also attach birdwatching to the methods of a class definition by using the birdwatch method.
+I would suggest though, if you're already using ES6 and Babel, then why not go ahead and turn on Stage 0 so you can enjoy the benefits of using decorators (take a look under the ES7 heading).
+
+```js
+
+  // other component file
+
+  import birdwatch from 'birdwatcher';
+  import errorhandling from 'errorhandling';
+
+  class SomeComponent {
+    ...
+  }
+
+
+  export default birdwatch(errorhandling)(myComponent,'myComponentName');
+```
+
+
+## In ES7
+And if you're feeling experimental with ES7 decorators, you can also use birdwatcher by applying birdwatch decorator:
 
 ```js
   // other component file
-  import errorHandeling from 'errorHandeling';
 
-  @errorHandeling('SomeComponentName')
+  import birdwatch from 'birdwatcher';
+  // your custom birdwatcher
+  import errorhandling from 'errorhandling';
+
+  @birdwatch(errorhandling,'SomeComponentName')
+  class SomeComponent {
+    ...
+  }
+
+  export default SomeComponent;
+```
+
+Or if you're not using a custom birdwatcher configuration (you *can* do this, but that doesn't mean you should. try and keep your error handling logic separate from your components, thats the whole point).
+
+```js
+  // other component file
+  import birdwatch from 'birdwatcher';
+
+  @birdwatch('SomeComponentName',{
+    onError: function(){
+      // ... some error handling
+    }
+  })
   class SomeComponent {
     ...
   }
