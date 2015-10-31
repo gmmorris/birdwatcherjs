@@ -1,38 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
     <title>Birdwatcherjs by gmmorris</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
-
   <body>
-    <div id="container">
-      <div class="inner">
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/gmmorris/birdwatcherjs">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/gmmorris/birdwatcherjs/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/gmmorris/birdwatcherjs/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
 
-        <header>
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
           <h1>Birdwatcherjs</h1>
-          <h2>A covert error handling utility for Javascript. A small utility for implementing the NCZ Javascript error handling anti-pattern.</h2>
-        </header>
+          <p>A covert error handling utility for Javascript. A small utility for implementing the NCZ Javascript error handling anti-pattern.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/gmmorris">gmmorris</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/gmmorris/birdwatcherjs/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/gmmorris/birdwatcherjs/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/gmmorris/birdwatcherjs" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
-          <h1>
-<a id="birdwatcher-js--" class="anchor" href="#birdwatcher-js--" aria-hidden="true"><span class="octicon octicon-link"></span></a>Birdwatcher JS <img src="https://travis-ci.org/gmmorris/birdwatcherjs.svg?branch=master" alt="alt TravisCI Build"> <a href="https://codeclimate.com/github/gmmorris/birdwatcherjs"><img src="https://codeclimate.com/github/gmmorris/birdwatcherjs/badges/gpa.svg" alt="Code Climate"></a>
+        <h1>
+<a id="birdwatcher-js---" class="anchor" href="#birdwatcher-js---" aria-hidden="true"><span class="octicon octicon-link"></span></a>Birdwatcher JS <img src="https://travis-ci.org/gmmorris/birdwatcherjs.svg?branch=master" alt="alt TravisCI Build"> <a href="https://codeclimate.com/github/gmmorris/birdwatcherjs"><img src="https://codeclimate.com/github/gmmorris/birdwatcherjs/badges/gpa.svg" alt="Code Climate"></a> <a href="https://www.npmjs.com/package/birdwatcher"><img src="https://img.shields.io/npm/v/birdwatcher.svg?style=flat-square" alt="npm version"></a>
 </h1>
 
 <p>A small utility for implementing the NCZ JavaScript error handling pattern.
@@ -174,12 +181,12 @@ If you want a systemwide default onError handler, to send reports to your Fronte
 I've used this approach in multiple different websites and projects and have foudn it a great way to seperate my error tracking from my business components.</p>
 
 <h4>
-<a id="errorhandelingjs" class="anchor" href="#errorhandelingjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>errorHandeling.js</h4>
+<a id="errorhandlingjs" class="anchor" href="#errorhandlingjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>errorhandling.js</h4>
 
 <div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> {<span class="pl-smi">configure</span>} <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>birdwatcher<span class="pl-pds">'</span></span>;
 
   <span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">configure</span>({
-    <span class="pl-smi">onError</span> : <span class="pl-smi">ufunction</span>(){
+    <span class="pl-smi">onError</span> : <span class="pl-smi">function</span>(){
       ... // <span class="pl-smi">error</span> <span class="pl-smi">tracking</span> <span class="pl-smi">logic</span>
     }
   })</pre></div>
@@ -191,9 +198,9 @@ I've used this approach in multiple different websites and projects and have fou
 
 <div class="highlight highlight-source-js"><pre>
   <span class="pl-c">// other component file</span>
-  <span class="pl-k">import</span> <span class="pl-smi">errorHandeling</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>errorHandeling<span class="pl-pds">'</span></span>;
+  <span class="pl-k">import</span> <span class="pl-smi">errorhandling</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>errorhandling<span class="pl-pds">'</span></span>;
 
-  errorHandeling(<span class="pl-k">class</span> <span class="pl-en">SomeComponent</span> {
+  <span class="pl-k">const</span> <span class="pl-c1">SomeComponent</span> <span class="pl-k">=</span> errorhandling({
     ...
   }, <span class="pl-s"><span class="pl-pds">'</span>SomeComponentName<span class="pl-pds">'</span></span>);
 
@@ -204,31 +211,61 @@ I've used this approach in multiple different websites and projects and have fou
     <span class="pl-en">doThat</span> <span class="pl-k">:</span> <span class="pl-k">function</span>(){}
   };
 
-  <span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">errorHandeling</span>(<span class="pl-smi">myComponent</span>,<span class="pl-s"><span class="pl-pds">'</span>myComponentName<span class="pl-pds">'</span></span>);</pre></div>
+  <span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">errorhandling</span>(<span class="pl-smi">myComponent</span>,<span class="pl-s"><span class="pl-pds">'</span>myComponentName<span class="pl-pds">'</span></span>);</pre></div>
+
+<p>You can also attach birdwatching to the methods of a class definition by using the birdwatch method.
+I would suggest though, if you're already using ES6 and Babel, then why not go ahead and turn on Stage 0 so you can enjoy the benefits of using decorators (take a look under the ES7 heading).</p>
+
+<div class="highlight highlight-source-js"><pre>
+  <span class="pl-c">// other component file</span>
+
+  <span class="pl-k">import</span> <span class="pl-smi">birdwatch</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>birdwatcher<span class="pl-pds">'</span></span>;
+  <span class="pl-k">import</span> <span class="pl-smi">errorhandling</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>errorhandling<span class="pl-pds">'</span></span>;
+
+  <span class="pl-k">class</span> <span class="pl-en">SomeComponent</span> {
+    ...
+  }
+
+
+  <span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">birdwatch</span>(<span class="pl-smi">errorhandling</span>)(<span class="pl-smi">myComponent</span>,<span class="pl-s"><span class="pl-pds">'</span>myComponentName<span class="pl-pds">'</span></span>);</pre></div>
 
 <h2>
-<a id="in-es7---coming-soon-working-on-it-right-now" class="anchor" href="#in-es7---coming-soon-working-on-it-right-now" aria-hidden="true"><span class="octicon octicon-link"></span></a>In ES7 - coming soon (working on it right now!)</h2>
+<a id="in-es7" class="anchor" href="#in-es7" aria-hidden="true"><span class="octicon octicon-link"></span></a>In ES7</h2>
 
-<p>And if you're feeling experimental with ES7 decorators, you soon will be able to do this:</p>
+<p>And if you're feeling experimental with ES7 decorators, you can also use birdwatcher by applying birdwatch decorator:</p>
 
 <div class="highlight highlight-source-js"><pre>  <span class="pl-c">// other component file</span>
-  <span class="pl-k">import</span> <span class="pl-smi">errorHandeling</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>errorHandeling<span class="pl-pds">'</span></span>;
 
-  @errorHandeling(<span class="pl-s"><span class="pl-pds">'</span>SomeComponentName<span class="pl-pds">'</span></span>)
+  <span class="pl-k">import</span> <span class="pl-smi">birdwatch</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>birdwatcher<span class="pl-pds">'</span></span>;
+  <span class="pl-c">// your custom birdwatcher</span>
+  <span class="pl-k">import</span> <span class="pl-smi">errorhandling</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>errorhandling<span class="pl-pds">'</span></span>;
+
+  @birdwatch(errorhandling,<span class="pl-s"><span class="pl-pds">'</span>SomeComponentName<span class="pl-pds">'</span></span>)
   <span class="pl-k">class</span> <span class="pl-en">SomeComponent</span> {
     ...
   }
 
   <span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">SomeComponent</span>;</pre></div>
-        </section>
 
-        <footer>
-          Birdwatcherjs is maintained by <a href="https://github.com/gmmorris">gmmorris</a><br>
-          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+<p>Or if you're not using a custom birdwatcher configuration (you <em>can</em> do this, but that doesn't mean you should. try and keep your error handling logic separate from your components, thats the whole point).</p>
 
-        
-      </div>
+<div class="highlight highlight-source-js"><pre>  <span class="pl-c">// other component file</span>
+  <span class="pl-k">import</span> <span class="pl-smi">birdwatch</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>birdwatcher<span class="pl-pds">'</span></span>;
+
+  @birdwatch(<span class="pl-s"><span class="pl-pds">'</span>SomeComponentName<span class="pl-pds">'</span></span>,{
+    <span class="pl-en">onError</span><span class="pl-k">:</span> <span class="pl-k">function</span>(){
+      <span class="pl-c">// ... some error handling</span>
+    }
+  })
+  <span class="pl-k">class</span> <span class="pl-en">SomeComponent</span> {
+    ...
+  }
+
+  <span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">SomeComponent</span>;</pre></div>
+      </section>
+
     </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
   </body>
 </html>
