@@ -4,5 +4,6 @@ sudo: false
 
 install:
  - npm install
+ - npm install babel-polyfill
 
 script: npm test
