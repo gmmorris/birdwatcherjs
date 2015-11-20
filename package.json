@@ -21,7 +21,7 @@
     "preversion": "npm test",
     "postversion": "git push && git push --tags",
     "prepublish": "npm run compile",
-    "test": "mocha --compilers js:babel/register --require ./test/utils/tools.js --recursive",
+    "test": "npm run compile && mocha --compilers js:babel/register --require ./test/utils/tools.js --recursive",
     "test:watch": "npm run test -- --watch",
     "test:cov": "babel-node $(npm bin)/isparta cover $(npm bin)/_mocha -- --recursive"
   },

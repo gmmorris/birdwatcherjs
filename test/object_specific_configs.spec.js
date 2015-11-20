@@ -1,4 +1,4 @@
-import {birdwatcher, configure, isBirdwatcherError} from '../src/index';
+import birdwatcher, {configure, isBirdwatcherError} from '../lib/index';
 import {expect} from 'chai';
 import sinon from 'sinon';
 import assert from 'simple-assert';

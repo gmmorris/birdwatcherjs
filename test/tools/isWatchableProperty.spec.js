@@ -1,4 +1,4 @@
-import {isWatchablePropertyOfComponent, isWatchablePropertyOfConstructor} from '../../src/tools/isWatchableProperty';
+import {isWatchablePropertyOfComponent, isWatchablePropertyOfConstructor} from '../../lib/tools/isWatchableProperty';
 import {expect} from 'chai';
 import assert from 'simple-assert';
 

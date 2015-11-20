@@ -1,4 +1,4 @@
-import pick from '../../src/tools/pick';
+import pick from '../../lib/tools/pick';
 import {expect} from 'chai';
 
 describe('pick', () => {
