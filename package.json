@@ -18,8 +18,7 @@
   "scripts": {
     "lint": "eslint src test",
     "compile": "babel -d lib src",
-    "preversion": "npm run clean && npm test",
-    "version": "npm run compile",
+    "preversion": "npm run clean && npm run compile && npm test",
     "postversion": "git push && git push --tags && npm run clean",
     "prepublish": "npm run clean && npm run compile",
     "clean": "rimraf lib",
