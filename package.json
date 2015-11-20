@@ -17,13 +17,10 @@
   ],
   "scripts": {
     "lint": "eslint src test",
-    "build": "babel src --out-dir lib",
-    "preversion": "npm run clean && npm test",
-    "version": "npm run build",
-    "postversion": "git push && git push --tags && npm run clean",
-    "prepublish": "npm run clean && npm run build",
-    "postinstall": "npm run build",
-    "clean": "rimraf lib",
+    "compile": "babel --optional runtime -d lib/ src/",
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags",
+    "prepublish": "npm run compile",
     "test": "mocha --compilers js:babel/register --require ./test/utils/tools.js --recursive",
     "test:watch": "npm run test -- --watch",
     "test:cov": "babel-node $(npm bin)/isparta cover $(npm bin)/_mocha -- --recursive"
@@ -31,8 +28,8 @@
   "dependencies": {},
   "devDependencies": {
     "babel": "^5.8.29",
+    "babel-runtime": "^5.8.24",
     "babel-eslint": "^4.1.3",
-    "babel-runtime": "^5.8.34",
     "chai": "^3.2.0",
     "eslint": "^1.7.3",
     "eslint-config-airbnb": "^0.1.0",
