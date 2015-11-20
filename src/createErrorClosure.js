@@ -1,7 +1,7 @@
 import birdwatcherError from './error';
 
 export default function(birdwatcheredObj, name, methodName, method, configuration, birdwatcherObject) {
-  return () => {
+  return function() {
     try {
       return method.apply(this, arguments);
     } catch (o_O) {
