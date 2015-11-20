@@ -1,4 +1,4 @@
-import {isWatchablePropertyOfComponent, isWatchablePropertyOfConstructor} from '../../src/tools/isWatchableProperty';
+import {isWatchablePropertyOfComponent, isWatchablePropertyOfConstructor} from '../../lib/tools/isWatchableProperty';
 import {expect} from 'chai';
 import assert from 'simple-assert';
 
@@ -166,15 +166,9 @@ describe('isWatchablePropertyOfConstructor', () => {
     }
     assert(isWatchablePropertyOfConstructor(Component, 'doWhatever'));
   });
-  it('returns false for a non function property', () => {
-    class Component {
-      prop : 123
-    }
-    assert(!isWatchablePropertyOfConstructor(Component, 'prop'));
-  });
   it('returns false for a non writable property', () => {
     class Component {
-      prop : 123
+      constructor() {}
     }
     Object.defineProperty(Component.prototype, 'myInvalidProp', {
       enumerable: false,
@@ -187,7 +181,7 @@ describe('isWatchablePropertyOfConstructor', () => {
   });
   it('returns false for a non configurable property', () => {
     class Component {
-      prop : 123
+      constructor() {}
     }
     Object.defineProperty(Component.prototype, 'myInvalidProp', {
       enumerable: false,
