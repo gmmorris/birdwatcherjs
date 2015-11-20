@@ -1,4 +1,4 @@
-import {birdwatcher, configure} from '../src/index';
+import birdwatcher, { configure } from '../lib/index';
 import {expect} from 'chai';
 import sinon from 'sinon';
 
@@ -45,20 +45,20 @@ describe('Global configuration', () => {
     const onError = sinon.spy();
     const myBirdwatcher = configure('My.Default.Name', {
       watchProperties: true,
-      onError: (component, name) => {
+      onError: (err, name, config) => {
         expect(name).to.equal('My.Default.Name');
         onError();
       }
     });
 
-    let NoInitPony = () => {
+    let noInitPony = function() {
       throw new Error('No init for pony');
     };
 
-    NoInitPony = myBirdwatcher(NoInitPony);
+    noInitPony = myBirdwatcher(noInitPony);
 
     expect(() => {
-      return new NoInitPony();
+      const pony = new noInitPony();
     }).to.throw(Error);
 
     expect(onError.should.have.been.calledOnce);
@@ -73,22 +73,22 @@ describe('Global configuration', () => {
       }
     });
 
-    let NoInitPony = () => {
+    let noInitPony = function() {
       throw new Error('No init for pony');
     };
 
-    NoInitPony.staticFunc = () => {
+    noInitPony.staticFunc = () => {
       throw new Error('Oh my god');
     };
 
-    NoInitPony = myBirdwatcher(NoInitPony);
+    noInitPony = myBirdwatcher(noInitPony);
 
     expect(() => {
-      NoInitPony.staticFunc();
+      noInitPony.staticFunc();
     }).to.throw(Error);
 
     expect(() => {
-      return new NoInitPony();
+      const pony = new noInitPony();
     }).to.throw(Error);
 
     expect(onError.should.have.been.calledTwice);
@@ -103,21 +103,21 @@ describe('Global configuration', () => {
       }
     });
 
-    let NoInitPony = () => {
+    let noInitPony = () => {
       throw new Error('No init for pony');
     };
-    NoInitPony.staticFunc = () => {
+    noInitPony.staticFunc = () => {
       throw new Error('Oh my god');
     };
 
-    NoInitPony = myBirdwatcher(NoInitPony);
+    noInitPony = myBirdwatcher(noInitPony);
 
     expect(() => {
-      NoInitPony.staticFunc();
+      noInitPony.staticFunc();
     }).to.throw(Error);
 
     expect(() => {
-      return new NoInitPony();
+      const pony = new noInitPony();
     }).to.throw(Error);
 
     expect(onError.should.have.been.calledOnce);
@@ -132,21 +132,21 @@ describe('Global configuration', () => {
       }
     });
 
-    let NoInitPony = () => {
+    let noInitPony = () => {
       throw new Error('No init for pony');
     };
-    NoInitPony.staticFunc = () => {
+    noInitPony.staticFunc = () => {
       throw new Error('Oh my god');
     };
 
-    NoInitPony = myBirdwatcher(NoInitPony);
+    noInitPony = myBirdwatcher(noInitPony);
 
     expect(() => {
-      NoInitPony.staticFunc();
+      noInitPony.staticFunc();
     }).to.throw(Error);
 
     expect(() => {
-      return new NoInitPony();
+      const pony = new noInitPony();
     }).to.throw(Error);
 
     expect(onError.should.have.been.calledOnce);
