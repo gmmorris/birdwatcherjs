@@ -5,6 +5,8 @@
  * Birdwatcher (Slang) A spy, usually used in the UK.
  *
  */
+import 'babel-polyfill';
+
 import defaultConfiguration from './configuration';
 import createErrorClosure from './createErrorClosure';
 import {isWatchablePropertyOfComponent} from './tools/isWatchableProperty';
