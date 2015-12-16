@@ -21,7 +21,7 @@ Assuming you bundled the Birdwatcher utility into it's own file named *birdwatch
 ```js
     window.theKing = {
         giveUpThrone: function(){
-            throw new Error("The king will never be over thrown!");
+            throw Error("The king will never be over thrown!");
         }
     };
 
