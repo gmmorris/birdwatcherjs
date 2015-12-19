@@ -4,6 +4,10 @@ Birdwatcher JS ![alt TravisCI Build](https://travis-ci.org/gmmorris/birdwatcherj
 A small utility for implementing the NCZ JavaScript error handling pattern.
 To understand the anti anti-pattern pattern: http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/
 
+## What do we need it for?
+Birdwatcher allows you to completely decouple your error handling strategy from your component implementations.
+It allows you to attach error handling to your objects without having to write try/catch throughout their implementations and at the same time, allows you to attach custom configurations for specific objects or groups of objects, while still maintaining a uniform strategy for dealing with their errors when they arise.
+
 ## In the Browser (as ES5)
 To use birdwatcher, all you have to do is tell birdwatcher to spy on an object and set the callback you wish to have called when an error is raised.
 
