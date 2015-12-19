@@ -21,6 +21,11 @@ Assuming you bundled the Birdwatcher utility into it's own file named *birdwatch
     <script type="text/javascript" src="birdwatcher.min.js"></script>
 ```
 
+## In Node
+```js
+  npm install --save birdwatcher
+```
+
 ### Basic usage
 ```js
     window.theKing = {
